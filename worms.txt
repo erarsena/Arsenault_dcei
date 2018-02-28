@@ -17,5 +17,5 @@ Pond.Field	4.1	0	Meadow	5	T	6
 Water.Meadow	3.9	0	Meadow	4.9	T	8
 Cheapside	2.2	8	Scrub	4.7	T	4
 Pound.Hill	4.4	2	Arable	4.5	F	5
-Gravel.Pit	2.9	1	Grassland	3.5	F	1
+Gravel.Pit.WuTang	2.9	1	Grassland	3.5	F	1
 Farm.Wood	0.8	10	Scrub	5.1	T	3
