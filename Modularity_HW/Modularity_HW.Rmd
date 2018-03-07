@@ -4,27 +4,35 @@ author: "Emily Arsenault"
 date: "March 7, 2018"
 output: pdf_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+<!--Chunk for getting the data--> 
+```{r include=F}
+pcpn <- readRDS("USAAnnualPcpn1950_2008.Rds")
+temp <- readRDS("USAAnnualTemp1950_2008.Rds")
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+<!--Chunk for cleaning the data-->
+```{r include=F}
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+<!--Chunk for making the map-->
+```{r include=F}
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Abstract
+
+## Introduction
+
+- Can we see climate warming for ourselves by analyzing this data?  
+- In what parts of the country are temperatures getting warmer? Are there any parts that actually got colder over 1950-2010?  
+- Can we say, based on these data, what change has occurred in precipitation over the period?
+
+## Methods
+
+## Results
+
+- figure  
+- map
+
+## Discussion
+
+## References
