@@ -6,13 +6,20 @@ fontsize: 12pt
 bibliography: datacarpentry.bib
 csl: science.csl
 ---
+<!--Chunk for reproducibility checkpoint-->
+```{r checkpoint, echo=F, include=F}
+#install.packages("checkpoint")
+library(checkpoint)
+checkpoint("2018-03-01")
+```
+
 <!--Chunk for loading necessary packages-->
-```{r include=F}
-#install.packages("maps")
-#install.packages("httr")
-#install.packages("lubridate")
-#install.packages("qdapRegex")
-#install.packages("jsonlite")
+```{r packages, include=F}
+#install.packages("maps") #creating maps
+#install.packages("httr") #get patch post head put delete
+#install.packages("lubridate") #working with dates
+#install.packages("qdapRegex") #regular expression tools
+#install.packages("jsonlite") #working with json data
 library(maps)
 library(httr)
 library(lubridate)
@@ -21,95 +28,39 @@ library(jsonlite)
 ```
 
 <!--Chunk for importing the data-->
-```{r include=F, cache=T}
-temp.1950_2016 <- function(start = "19500101", end = "19501231", states = state.abb[1:3]) {
-  annualmean <- data.frame(NA)
-  for(i in seq_along(states)){
-    #took step to make api modular instead of just copying in full url as character string
-    base.url <- "http://data.rcc-acis.org/MultiStnData?" #base url specifically for multi-station data
-    param1.url <- "params=%7B%22state%22%3A%22" #states
-    param2.url <- "%22%2C%22sdate%22%3A%22" #start date (19500101)
-    param3.url <- "%22%2C%22edate%22%3A%22" #end date (19501231)
-    param4.url <- "%22%2C%22elems%22%3A%22avgt%22%2C%22meta%22%3A%22ll%2Cname%2Cstate%22%7D" #average temp
-    acis.url <- paste0(base.url, param1.url, state.abb[i], param2.url, start, param3.url, end, param4.url)
-    test <- httr::GET(url = acis.url) #make request
-    dat <- httr::content(test, "text", "application/json", encoding = "UTF-8") #make human readable (R list)
-    json_data <- jsonlite::fromJSON(dat) #convert JSON to R list
-    
-  }
-}
+```{r import, include=F, cache=T}
 
+#Dependencies: if TRUE, rds files / if FALSE, pull directly from acis website
+#Outputs: data rds files (temp; pcpn)
 
-<!--Chunk for importing the data--> 
-```{r include=F, cache=TRUE}
-acis2df <- function(sdate="19500101", edate="19501231", states=state.abb[1:3]){
-    annualmean <- data.frame(NA)
-    for(i in seq_along(states)){
-      # api: "params=%7B%22state%22%3A%22ks%22%2C%22sdate%22%3A%2219500101%22%2C%22edate%22%3A%2220101231%22%2C%22elems%22%3A%22avgt%22%2C%22meta%22%3A%22ll%2Cstation%2Cstate%22%7D"
-      base.url <- "http://data.rcc-acis.org/MultiStnData?" #base url specifically for the multi-station data
-      params1.url <- "params=%7B%22state%22%3A%22"
-      params2.url <- "%22%2C%22sdate%22%3A%22"
-      params3.url <- "%22%2C%22edate%22%3A%22"
-      params4.url <- "%22%2C%22elems%22%3A%22avgt%22%2C%22meta%22%3A%22ll%2Cname%2Cstate%22%7D"
-      acis.url <- paste0(base.url,params1.url,state.abb[i],params2.url, sdate, params3.url, edate, params4.url)
-      test <- httr::GET(url=acis.url)
-      dat <- httr::content(test, "text","application/json", encoding="UTF-8")
-      json_data <- jsonlite::fromJSON(dat)
-      ifelse(dir.exists("rds"), "dir all ready exists", dir.create("rds"))
-      newFN <- paste0("rds/",state.abb[i],"_",sdate,".rds")
-      saveRDS(json_data, file=newFN)
-      ff <- sapply(json_data$data$data, cbind)
-      ff[ff=="M"] <- NA
-      trace <- runif(1000,0.0001,.0099)
-      ff[ff=="T"] <- sample(trace,replace = T,size = 1)
-      class(ff) <- "numeric"
-      dates <- seq.Date(from=lubridate::ymd(sdate), to=lubridate::ymd(edate), by = "1 days")
-      year <- as.factor(lubridate::year(dates))
-      
-      ff <- data.frame(date=dates,ff)
-      names(ff) <- c("date",paste(json_data$data$meta$state[],json_data$data$meta$name[], json_data$data$meta$ll[][], sep="_"))
-      ff$year <- as.factor(lubridate::year(ff$date))
-      # summarize by year
-      fc <- aggregate(by=list(ff$year), x=ff[,2:(ncol(ff)-1)], mean)
-      names(fc)[1] <- "year"
-      fc$year <- as.numeric(as.character(fc$year))
-      annualmean <- cbind(annualmean, fc)
-      print(state.abb[i])
-      print(Sys.time())
-      Sys.sleep(2) #nice thing to do to let others get in on the queue
-    }
-    fname <- paste0("data/USAannualTemp",sdate,"_", edate,".rds")
-    saveRDS(Annualmean, file=fname) #how the data file will be named
-  }
-  
-  lf <- list.files(pattern="1231.rds$", path="data/", full.names = T)
-  temp <- data.frame()
-  for(i in lf){
-    tmp <- readRDS(i)
-    tmp2 <- reshape2::melt(tmp, id.vars="year")
-    temp <- rbind(temp, tmp2)
-  }
-  temp <- temp[!temp$variable=="NA.",]
-  grid <- strsplit(as.character(temp$variable), ",")
-  latff <- sapply(grid,"[",2)
-  temp$lat <- as.numeric(gsub(x=latff, replacement = "",pattern=" |)"))
-  lonff <- sapply(grid,"[",1)
-  temp$lon <- as.numeric(sub("\\D+","",lonff))*-1
-  temp$state <- substr(temp$variable,1,2)
-  library(qdapRegex)
-  temp$name <- rm_between(text.var =lonff, left = "_", right="_", extract=TRUE)
-  
-  saveRDS(temp, "~/Documents/DataCarpentry/Arsenault_dcei/Modularity_HW/USAAnnualTemp1950_2016.rds")
+#PSEUDOCODE DATA IMPORT
+#flag <- T/F
+#if flag is true
+#import rds data file
+#else
+#import data from ACIS website
+
+#does this file exist?
+#if yes, read it in
+#if no, use this function to download it from the web
+
+source("ACISimport.R") #modularity 
+
+provided <- exists("USAAnnualTemp1950_2016.rds") #modularity 2: writing extensible code
+if(provided){
+  temp <- readRDS("USAAnnualTemp1950_2016.rds")
+} else {
+  temp <- acis2df(sdate = "19500101", edate = "20161231", states = state.abb)
 }
 ```
 
 <!--Chunk for cleaning the data-->
-```{r include=T}
+```{r cleaning, include=T}
 temp
 ```
 
 <!--Chunk for making the map-->
-```{r include=F}
+```{r map, include=F}
 ```
 
 ## Abstract
