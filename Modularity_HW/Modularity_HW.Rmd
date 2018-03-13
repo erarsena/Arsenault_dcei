@@ -1,20 +1,52 @@
 ---
-title: "Modularity_HW"
-author: "Emily Arsenault"
-date: "March 7, 2018"
+title: "Patterns of climate change in the USA: an analysis of temperature and precipitation trends since 1950"
+author: Emily Arsenault, Department of Ecology & Evolutionary Biology, University of Kansas, Lawrence, Kansas 66047 USA
 output: pdf_document
+fontsize: 12pt
+bibliography: datacarpentry.bib
+csl: science.csl
 ---
-<!--Chunk for importing the data--> 
+<!--Chunk for loading necessary packages-->
 ```{r include=F}
-provided <- FALSE 
-if(provided) {
-  temp <- readRDS("USAAnnualTemp1950_2008.Rds")
-} else {
-  acis2df <- function(sdate="19500101", edate="19501231", states=state.abb[1:3]){
+#install.packages("maps")
+#install.packages("httr")
+#install.packages("lubridate")
+#install.packages("qdapRegex")
+#install.packages("jsonlite")
+library(maps)
+library(httr)
+library(lubridate)
+library(qdapRegex)
+library(jsonlite)
+```
+
+<!--Chunk for importing the data-->
+```{r include=F, cache=T}
+temp.1950_2016 <- function(start = "19500101", end = "19501231", states = state.abb[1:3]) {
+  annualmean <- data.frame(NA)
+  for(i in seq_along(states)){
+    #took step to make api modular instead of just copying in full url as character string
+    base.url <- "http://data.rcc-acis.org/MultiStnData?" #base url specifically for multi-station data
+    param1.url <- "params=%7B%22state%22%3A%22" #states
+    param2.url <- "%22%2C%22sdate%22%3A%22" #start date (19500101)
+    param3.url <- "%22%2C%22edate%22%3A%22" #end date (19501231)
+    param4.url <- "%22%2C%22elems%22%3A%22avgt%22%2C%22meta%22%3A%22ll%2Cname%2Cstate%22%7D" #average temp
+    acis.url <- paste0(base.url, param1.url, state.abb[i], param2.url, start, param3.url, end, param4.url)
+    test <- httr::GET(url = acis.url) #make request
+    dat <- httr::content(test, "text", "application/json", encoding = "UTF-8") #make human readable (R list)
+    json_data <- jsonlite::fromJSON(dat) #convert JSON to R list
+    
+  }
+}
+
+
+<!--Chunk for importing the data--> 
+```{r include=F, cache=TRUE}
+acis2df <- function(sdate="19500101", edate="19501231", states=state.abb[1:3]){
     annualmean <- data.frame(NA)
     for(i in seq_along(states)){
       # api: "params=%7B%22state%22%3A%22ks%22%2C%22sdate%22%3A%2219500101%22%2C%22edate%22%3A%2220101231%22%2C%22elems%22%3A%22avgt%22%2C%22meta%22%3A%22ll%2Cstation%2Cstate%22%7D"
-      base.url <- "http://data.rcc-acis.org/MultiStnData?"
+      base.url <- "http://data.rcc-acis.org/MultiStnData?" #base url specifically for the multi-station data
       params1.url <- "params=%7B%22state%22%3A%22"
       params2.url <- "%22%2C%22sdate%22%3A%22"
       params3.url <- "%22%2C%22edate%22%3A%22"
@@ -81,6 +113,9 @@ temp
 ```
 
 ## Abstract
+
+- Applied Climate Information System database (ACIS)
+- parameters included :
 
 ## Introduction
 
