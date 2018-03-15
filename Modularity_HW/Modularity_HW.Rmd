@@ -14,7 +14,7 @@ checkpoint("2018-03-01")
 ```
 
 <!--Chunk for importing the data-->
-```{r import, include=F, cache=T}
+```{r import, include=F, echo=F, cache=T}
 
 ##### MODULARITY 8: RECORDING DEPENDENCIES AND OUTPUTS FOR EACH CHUNK #####
 ## Dependencies of chunk: external script "ACISimport.R" and/or files "USAAnnualTemp1950_2016.rds" and "USAAnnualPcpn1950_2016.rds"
@@ -44,14 +44,17 @@ if(provided) {
   acis.temp <- acis2df(sdate = "19500101", edate = "20161231", states = state.abb)
 }
 
+#making the function work
+#break into 2 30-year chunks instead of 1 60 year
+##or, use bounding box instead of states?
+#otherwise, using too much RAM
+
+
 #test
 min(acis.temp$year) #start year, 1950
 max(acis.temp$year) #end year, 2016
 min(acis.pcpn$year) #start year, 1950
 max(acis.pcpn$year) #end year, 2008
-
-acis.temp <- na.omit(acis.temp)
-acis.pcpn <- na.omit(acis.pcpn)
 
 #Outputs: variable for rds data files (acis.temp; acis.pcpn) imported, loaded into R, and saved to directory as variables
 ```
@@ -64,18 +67,29 @@ acis.pcpn <- na.omit(acis.pcpn)
 #Pseudocode
 #set variable for minimum number of years needed to include weather station
 #use aggregate function to find length (years) for each weather station
-#if
+#if the number of rows for the weather station is less than 40, give NA value to year
+#na.omit
 
-#minyears <- 40 #minimum number of years needed to use weather station in subsequent analyses
-#acis.temp.stn <- aggregate(year ~ lat + lon + state, data = acis.temp, FUN = length)
-#acis.temp.years <- as.data.frame(acis.temp$year[acis.temp.stn$year>minyears]) #only include weather stations that have measured more than x years of data (minyears)
-#merge(acis.temp.stn, acis.temp.years)
+#install.packages("plyr")
 
-#acis.temp <- merge(acis.temp.stn, acis.temp.years, by = c(lat, lon, state))
+#remove any weather station with less than 40 years of data
+minyears <- 40 #minimum number of years needed to use weather station in subsequent analyses
+acis.temp.stn <- aggregate(year ~ variable + lat + lon + state, data = na.omit(acis.temp), FUN = length)
+acis.temp.stn$variable[acis.temp.stn$year<minyears] <- NA
+# get your new data.frame
+newdf <- na.omit(data.frame(year=acis.temp.stn$year, variable=rep(acis.temp.stn$variable, sapply(acis.temp.stn$variable, length))))
+stations <- newdf$variable #all of the variable names that we want
+newstations <- na.omit(acis.temp)[is.element(na.omit(acis.temp)$variable, stations),] #this is the cleaned data set finally omg I am going to die
 
-######
-#change all year < 40 to NA, do an no.omit
-#####
+#for each "variable" in acis.temp.stn
+#count the number of rows
+#if rows < 40
+#replace years column with NAs
+
+#change data format to matrix
+#dim() check dimensions of matrix
+library(reshape2)
+matrix.temp <- na.omit(acast(newstations, variable~year, value.var="value"))
 
 #Outputs: cleaned up dataset (tempclean)
 
@@ -84,12 +98,9 @@ acis.pcpn <- na.omit(acis.pcpn)
 <!--Chunk for data analysis-->
 ```{r analysis, include=F}
 
-#Dependencies: imported, cleaned dataset (tempclean)
+#Dependencies: imported, cleaned dataset (matrix.temp)
 
 ##### MODULARITY 1:GIVING VARIABLE NAMES TO CONSTANTS #####
-sdate <- 1950
-edate.pcpn <- 2008
-edate.temp <- 2016
 
 #use apply function to calculate mean temp for each year
 
@@ -98,6 +109,26 @@ edate.temp <- 2016
 
 <!--Chunk for making the map-->
 ```{r map, include=F}
+library(maps)
+#install.packages("mapdata")
+library(mapdata)
+#install.packages("RColorBrewer")
+library(RColorBrewer)
+library(classInt)
+
+map(database = "state")
+plotvar <- newstations$value
+nclr <- 8
+plotclr <- brewer.pal(nclr,"PuOr")
+plotclr <- plotclr[nclr:1] # reorder colors
+class <- classIntervals(plotvar, nclr, style="equal")
+colcode <- findColours(class, plotclr)
+points(acis.temp$lon, acis.temp$lat, pch=16, col=colcode, cex=2)
+points(acis.temp$lon, acis.temp$lat, cex=2)
+title("USA Annual Temperature 1950",
+    sub="Equal-Interval Class Intervals")
+legend(-117, 44, legend=names(attr(colcode, "table")),
+    fill=attr(colcode, "palette"), cex=0.6, bty="n")
 ```
 
 ## Abstract
