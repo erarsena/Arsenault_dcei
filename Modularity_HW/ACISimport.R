@@ -1,4 +1,9 @@
-#load libraries needed for script
+
+#install.packages("maps") #creating maps
+#install.packages("httr") #get patch post head put delete
+#install.packages("lubridate") #working with dates
+#install.packages("qdapRegex") #regular expression tools
+#install.packages("jsonlite") #working with json data
 library(maps)
 library(httr)
 library(lubridate)

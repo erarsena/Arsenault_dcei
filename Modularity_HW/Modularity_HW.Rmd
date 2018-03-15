@@ -13,50 +13,87 @@ library(checkpoint)
 checkpoint("2018-03-01")
 ```
 
-<!--Chunk for loading necessary packages-->
-```{r packages, include=F}
-#install.packages("maps") #creating maps
-#install.packages("httr") #get patch post head put delete
-#install.packages("lubridate") #working with dates
-#install.packages("qdapRegex") #regular expression tools
-#install.packages("jsonlite") #working with json data
-library(maps)
-library(httr)
-library(lubridate)
-library(qdapRegex)
-library(jsonlite)
-```
-
 <!--Chunk for importing the data-->
 ```{r import, include=F, cache=T}
 
-#Dependencies: if TRUE, rds files / if FALSE, pull directly from acis website
-#Outputs: data rds files (temp; pcpn)
+##### MODULARITY 8: RECORDING DEPENDENCIES AND OUTPUTS FOR EACH CHUNK #####
+## Dependencies of chunk: external script "ACISimport.R" and/or files "USAAnnualTemp1950_2016.rds" and "USAAnnualPcpn1950_2016.rds"
 
-#PSEUDOCODE DATA IMPORT
-#flag <- T/F
-#if flag is true
-#import rds data file
-#else
-#import data from ACIS website
+##### MODULARITY 7: WRITE PSEUDOCODE #####
+#if the file exists (TRUE)
+  #read it in
+#if the file does not exists (FALSE)
+  #use func in external script to download data from the web and create this file
 
-#does this file exist?
-#if yes, read it in
-#if no, use this function to download it from the web
+##### MODULARITY 9: USING EXTERNAL SCRIPT #####
+source("ACISimport.R") #function for pulling climate data from web
 
-source("ACISimport.R") #modularity 
+##### MODULARITY 2: WRITING EXTENSIBLE CODE #####
+data.temp <- "USAAnnualTemp1950_2008.rds"
+data.pcpn <- "USAAnnualPcpn1950_2008.rds"
+data.temp.web <- "USAannualTemp1950_2016.rds"
 
-provided <- exists("USAAnnualTemp1950_2016.rds") #modularity 2: writing extensible code
-if(provided){
-  temp <- readRDS("USAAnnualTemp1950_2016.rds")
+acis.pcpn <- readRDS(data.pcpn)
+
+provided <- FALSE
+if(provided) {
+  acis.temp <- readRDS(data.temp)
+} else if(file.exists(data.temp.web)) {
+  acis.temp <- readRDS(data.temp.web)
 } else {
-  temp <- acis2df(sdate = "19500101", edate = "20161231", states = state.abb)
+  acis.temp <- acis2df(sdate = "19500101", edate = "20161231", states = state.abb)
 }
+
+#test
+min(acis.temp$year) #start year, 1950
+max(acis.temp$year) #end year, 2016
+min(acis.pcpn$year) #start year, 1950
+max(acis.pcpn$year) #end year, 2008
+
+acis.temp <- na.omit(acis.temp)
+acis.pcpn <- na.omit(acis.pcpn)
+
+#Outputs: variable for rds data files (acis.temp; acis.pcpn) imported, loaded into R, and saved to directory as variables
 ```
 
 <!--Chunk for cleaning the data-->
-```{r cleaning, include=T}
-temp
+```{r cleaning, include=F}
+
+#Dependencies: imported dataset (temp)
+
+#Pseudocode
+#set variable for minimum number of years needed to include weather station
+#use aggregate function to find length (years) for each weather station
+#if
+
+#minyears <- 40 #minimum number of years needed to use weather station in subsequent analyses
+#acis.temp.stn <- aggregate(year ~ lat + lon + state, data = acis.temp, FUN = length)
+#acis.temp.years <- as.data.frame(acis.temp$year[acis.temp.stn$year>minyears]) #only include weather stations that have measured more than x years of data (minyears)
+#merge(acis.temp.stn, acis.temp.years)
+
+#acis.temp <- merge(acis.temp.stn, acis.temp.years, by = c(lat, lon, state))
+
+######
+#change all year < 40 to NA, do an no.omit
+#####
+
+#Outputs: cleaned up dataset (tempclean)
+
+```
+
+<!--Chunk for data analysis-->
+```{r analysis, include=F}
+
+#Dependencies: imported, cleaned dataset (tempclean)
+
+##### MODULARITY 1:GIVING VARIABLE NAMES TO CONSTANTS #####
+sdate <- 1950
+edate.pcpn <- 2008
+edate.temp <- 2016
+
+#use apply function to calculate mean temp for each year
+
+#Outputs: mintemp1950, mintemp2016, maxtemp1950, maxtemp2016, maxtemp1950sp, maxtemp2016sp, meantemp1950, meantemp2016, side effect plot of temperature averages by year
 ```
 
 <!--Chunk for making the map-->
@@ -70,11 +107,11 @@ temp
 
 ## Introduction
 
-- Can we see climate warming for ourselves by analyzing this data?  
-- In what parts of the country are temperatures getting warmer? Are there any parts that actually got colder over 1950-2010?  
-- Can we say, based on these data, what change has occurred in precipitation over the period?
+Periods of warming and cooling are natural phenomena throughout the history of the earth. However, evidence suggests that the unprecedented climate changes occuring over the last century have been a result of anthropogenic increases in carbon dioxide to the atmopshere. Here, we provide evidence to support climate warming in the United States based on patterns of temperature and precipitation. The objectives of this study were to (1) determine whether or not the United States has expereinced climate warming since 1950, (2) highlight key areas of the United States that have exeperienced the greatest changes in average annual temperature, and (3) determine the degree to which precipitation has changed in the United States over the last century.
 
 ## Methods
+
+Temperature and precipitation datasets were pulled from the Applied Climate Information System (ACIS) database @Hubbard2004. The temperature dataset includes yearly average temperature data gathered from weather stations located all over the USA, between the years of `r min(acis.temp$year)` and `r max(acis.temp$year)`. The precipitation dataset includes annual average rainfall measurements at weather stations all across the USA, measured between the years of __ and __.
 
 ## Results
 
