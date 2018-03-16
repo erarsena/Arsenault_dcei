@@ -6,9 +6,23 @@ fontsize: 12pt
 bibliography: datacarpentry.bib
 csl: science.csl
 ---
-<!--Chunk for reproducibility checkpoint-->
+<!--Chunk for package reproducibility-->
 ```{r checkpoint, echo=F, include=F}
 #install.packages("checkpoint")
+#install.packages("plyr") #working with datasets
+#install.packages("mapdata") #mapping
+#install.packages("RColorBrewer") #color spectra
+#install.packages("maps") #mapping
+#install.packages("httr") #get patch post head put delete
+#install.packages("lubridate") #working with dates
+#install.packages("qdapRegex") #regular expression tools
+#install.packages("jsonlite") #working with json data
+
+library(reshape2)
+library(maps)
+library(mapdata)
+library(RColorBrewer)
+library(classInt)
 library(checkpoint)
 checkpoint("2018-03-01")
 ```
@@ -17,124 +31,150 @@ checkpoint("2018-03-01")
 ```{r import, include=F, echo=F, cache=T}
 
 ##### MODULARITY 8: RECORDING DEPENDENCIES AND OUTPUTS FOR EACH CHUNK #####
-## Dependencies of chunk: external script "ACISimport.R" and/or files "USAAnnualTemp1950_2016.rds" and "USAAnnualPcpn1950_2016.rds"
 
-##### MODULARITY 7: WRITE PSEUDOCODE #####
-#if the file exists (TRUE)
-  #read it in
-#if the file does not exists (FALSE)
-  #use func in external script to download data from the web and create this file
+#Dependencies: external script "ACISimport.R" and/or files "USAAnnualTemp1950_2016.rds" and "USAAnnualPcpn1950_2016.rds"
+
+##### MODULARITY 7: WRITING PSEUDOCODE #####
+#source acis2df function from external script
+#flag (TRUE/FALSE)
+#if flag is TRUE, read in rds file
+  #if FALSE, then we want to use a better file
+    #if it already exists in our directory, read it in
+    #else, use function acis2df to pull it directly from the web
 
 ##### MODULARITY 9: USING EXTERNAL SCRIPT #####
-source("ACISimport.R") #function for pulling climate data from web
+source("acis2df.R") #function for pulling ACIS data from web
 
 ##### MODULARITY 2: WRITING EXTENSIBLE CODE #####
-data.temp <- "USAAnnualTemp1950_2008.rds"
-data.pcpn <- "USAAnnualPcpn1950_2008.rds"
-data.temp.web <- "USAannualTemp1950_2016.rds"
-
-acis.pcpn <- readRDS(data.pcpn)
-
 provided <- FALSE
 if(provided) {
-  acis.temp <- readRDS(data.temp)
-} else if(file.exists(data.temp.web)) {
-  acis.temp <- readRDS(data.temp.web)
+  acis.temp <- readRDS("USAAnnualTemp1950_2008.rds")
+} else if(file.exists("USAAnnualTemp1950_2016.rds")) {
+  acis.temp <- readRDS("USAAnnualTemp1950_2016.rds")
 } else {
-  acis.temp <- acis2df(sdate = "19500101", edate = "20161231", states = state.abb)
+  acis.temp1 <- acis2df(sdate = "19500101", edate = "19821231", states = state.abb) #first half of the data
+  acis.temp2 <- acis2df(sdate = "19830101", edate = "20161231", states = state.abb) #second half of the data
+  acis.temp <- cbind(acis.temp1, acis.temp2)
 }
 
-#making the function work
-#break into 2 30-year chunks instead of 1 60 year
-##or, use bounding box instead of states?
-#otherwise, using too much RAM
-
-
-#test
-min(acis.temp$year) #start year, 1950
-max(acis.temp$year) #end year, 2016
-min(acis.pcpn$year) #start year, 1950
-max(acis.pcpn$year) #end year, 2008
+acis.pcpn <- readRDS("USAAnnualPcpn1950_2016.rds")
 
 #Outputs: variable for rds data files (acis.temp; acis.pcpn) imported, loaded into R, and saved to directory as variables
 ```
 
-<!--Chunk for cleaning the data-->
+<!--Chunk for removing weather stations with too few years of data-->
 ```{r cleaning, include=F}
 
 #Dependencies: imported dataset (temp)
 
-#Pseudocode
-#set variable for minimum number of years needed to include weather station
+##### MODULARITY 7: WRITING PSEUDOCODE #####
+#set variable (minyears) for minimum number of years needed to include weather station
 #use aggregate function to find length (years) for each weather station
-#if the number of rows for the weather station is less than 40, give NA value to year
+#if the number of rows for the weather station is less than minyears, give NA value to year
+#create a new data frame that omits the weather stations with less than minyears data
 #na.omit
 
-#install.packages("plyr")
-
-#remove any weather station with less than 40 years of data
+##### MODULARITY 1: GIVING VARIABLE NAMES TO CONSTANTS #####
 minyears <- 40 #minimum number of years needed to use weather station in subsequent analyses
 acis.temp.stn <- aggregate(year ~ variable + lat + lon + state, data = na.omit(acis.temp), FUN = length)
-acis.temp.stn$variable[acis.temp.stn$year<minyears] <- NA
-# get your new data.frame
-newdf <- na.omit(data.frame(year=acis.temp.stn$year, variable=rep(acis.temp.stn$variable, sapply(acis.temp.stn$variable, length))))
-stations <- newdf$variable #all of the variable names that we want
-newstations <- na.omit(acis.temp)[is.element(na.omit(acis.temp)$variable, stations),] #this is the cleaned data set finally omg I am going to die
+acis.temp.stn$variable[acis.temp.stn$year<minyears] <- NA #give NA values to values we are throwing out
+newdf <- na.omit(data.frame(year=acis.temp.stn$year, variable=rep(acis.temp.stn$variable, sapply(acis.temp.stn$variable, length)))) #make new dataframe, omits weather stations with too few years of data
+stations.temp <- newdf$variable #all of the variable names that we want
+clean.temp <- na.omit(acis.temp)[is.element(na.omit(acis.temp)$variable, stationstemp),] #to use for subsequent analyses
 
-#for each "variable" in acis.temp.stn
-#count the number of rows
-#if rows < 40
-#replace years column with NAs
+acis.pcpn.stn <- aggregate(year ~ name + lat + lon + state, data = na.omit(acis.pcpn), FUN = length)
+acis.pcpn.stn$name[acis.pcpn.stn$year<minyears] <- NA #give NA values to values we are throwing out
+newdf <- na.omit(data.frame(year=acis.pcpn.stn$year, name=rep(acis.pcpn.stn$name, sapply(acis.pcpn.stn$name, length)))) #make new dataframe, omits weather stations with too few years of data
+stationspcpn <- newdf$name #all of the variable names that we want
+clean.pcpn <- na.omit(acis.pcpn)[is.element(na.omit(acis.pcpn)$name, stationspcpn),] #to use for subsequent analyses
 
-#change data format to matrix
-#dim() check dimensions of matrix
-library(reshape2)
-matrix.temp <- na.omit(acast(newstations, variable~year, value.var="value"))
+#I have copied and pasted temp script for pcpn - this could have been made more modular by writing a function to repeat the work for me
 
-#Outputs: cleaned up dataset (tempclean)
+#Outputs: cleaned up dataset (clean.temp, clean.pcpn)
+```
 
+<!--Chunk for changing format from data frame to matrix-->
+```{r matrix, include=F}
+
+#Dependencies: cleaned datasets (newstationtemp, newstationpcpn)
+
+matrix.temp <- na.omit(acast(clean.temp, variable~year, value.var="value"))
+dim(matrix.temp) #71, 67
+
+matrix.pcpn <- na.omit(acast(clean.pcpn, name~year, value.var = "data"))
+dim(matrix.pcpn) #110, 67
+
+#Outputs: data in matrix form (matrix.temp, matrix.pcpn)
 ```
 
 <!--Chunk for data analysis-->
-```{r analysis, include=F}
+```{r analysis, include=T}
 
-#Dependencies: imported, cleaned dataset (matrix.temp)
+#Dependencies: matrix converted from dataframe (matrix.temp, matrix.pcpn)
+
+temp.reg <- lm(avg.temp~year)
+temp.pcpn <- 
+
+avg.temp <- (colMeans(matrix.temp))
+avg.pcpn <- (colMeans(matrix.pcpn))
+year <- 1950:2016
+plot(x = year, y = avg.temp)
+plot(x = year, y = avg.pcpn, type = "b", col = "blue")
+
+avg.temp <- (colMeans(matrix.temp))
+avg.pcpn <- (colMeans(matrix.pcpn))
+year <- 1950:2016
+plot(avg.temp)
+avg.temp
 
 ##### MODULARITY 1:GIVING VARIABLE NAMES TO CONSTANTS #####
 
 #use apply function to calculate mean temp for each year
 
-#Outputs: mintemp1950, mintemp2016, maxtemp1950, maxtemp2016, maxtemp1950sp, maxtemp2016sp, meantemp1950, meantemp2016, side effect plot of temperature averages by year
+#Outputs: linear regression statistics for temp and pcpn, scatter plots for temp and pcpn
 ```
 
 <!--Chunk for making the map-->
-```{r map, include=F}
-library(maps)
-#install.packages("mapdata")
-library(mapdata)
-#install.packages("RColorBrewer")
-library(RColorBrewer)
-library(classInt)
+```{r map, include=T}
 
+
+sdate <- 1950
 map(database = "state")
-plotvar <- newstations$value
+plotvar <- acis.temp$value[acis.temp$year==sdate]
 nclr <- 8
 plotclr <- brewer.pal(nclr,"PuOr")
 plotclr <- plotclr[nclr:1] # reorder colors
 class <- classIntervals(plotvar, nclr, style="equal")
 colcode <- findColours(class, plotclr)
-points(acis.temp$lon, acis.temp$lat, pch=16, col=colcode, cex=2)
-points(acis.temp$lon, acis.temp$lat, cex=2)
-title("USA Annual Temperature 1950",
+points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate], pch=16, col=colcode, cex=2)
+points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate], cex=2)
+title("Average annual temperature 1950",
     sub="Equal-Interval Class Intervals")
 legend(-117, 44, legend=names(attr(colcode, "table")),
     fill=attr(colcode, "palette"), cex=0.6, bty="n")
+
+edate <- 2016
+map(database = "state")
+plotvar <- acis.temp$value[acis.temp$year==edate]
+nclr <- 8
+plotclr <- brewer.pal(nclr,"PuOr")
+plotclr <- plotclr[nclr:1] # reorder colors
+class <- classIntervals(plotvar, nclr, style="equal")
+colcode <- findColours(class, plotclr)
+points(acis.temp$lon[acis.temp$year==edate], acis.temp$lat[acis.temp$year==edate], pch=16, col=colcode, cex=2)
+points(acis.temp$lon[acis.temp$year==edate], acis.temp$lat[acis.temp$year==edate], cex=2)
+title("Average annual temperature 2016",
+    sub="Equal-Interval Class Intervals")
+legend(-117, 44, legend=names(attr(colcode, "table")),
+    fill=attr(colcode, "palette"), cex=0.6, bty="n")
+
+#again, this could have been made more modular by writing a function
 ```
 
 ## Abstract
 
-- Applied Climate Information System database (ACIS)
-- parameters included :
+An analysis of United States weather station climate data collected between `r min(acis.temp$year)` and `r max(acis.temp$year)` suggests that anthropogenic climate change has had an effect on average annual temperature and precipitation across the United States.
+
 
 ## Introduction
 
@@ -142,9 +182,12 @@ Periods of warming and cooling are natural phenomena throughout the history of t
 
 ## Methods
 
-Temperature and precipitation datasets were pulled from the Applied Climate Information System (ACIS) database @Hubbard2004. The temperature dataset includes yearly average temperature data gathered from weather stations located all over the USA, between the years of `r min(acis.temp$year)` and `r max(acis.temp$year)`. The precipitation dataset includes annual average rainfall measurements at weather stations all across the USA, measured between the years of __ and __.
+Average annual temperature and precipitation data from weather stations across the United States were reported by the American Meteorological Society through the Applied Climate Information System (ACIS) @Hubbard2004. Temperature and precipitation data was collected between the years of `r min(acis.temp$year)` and `r max(acis.temp$year)`. Weather stations with less than `r minyears` total years of data were not considered as part of subsequent analyses. In total, `r length(unique(acis.temp$year))` years of climate data (`r min(acis.temp$year)`-`r max(acis.temp$year)`) from `r nrow(matrix.temp)` weather stations were included as part of the analysis.
+All statistical analyses were conducted in R @R2014.
 
 ## Results
+
+Between `r min(acis.temp$year)` and `r max(acis.temp$year)`, mean annual temperature ranged from `r round(min(matrix.temp), digits = 2)` to `r round(max(matrix.temp), digits = 2)`, averaging `r round(mean(matrix.temp), digits = 2)`, while average annual precipitation ranged from `r min(matrix.pcpn)` to `r max(matrix.pcpn)` with a mean level of `r round(mean(matrix.pcpn), digits = 2)` overall. The data show a significant, positive regression between year and temperature (LINEAR REGRESSION, __, __).
 
 - figure  
 - map
