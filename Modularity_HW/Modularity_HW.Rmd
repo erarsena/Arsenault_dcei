@@ -80,13 +80,13 @@ acis.temp.stn <- aggregate(year ~ variable + lat + lon + state, data = na.omit(a
 acis.temp.stn$variable[acis.temp.stn$year<minyears] <- NA #give NA values to values we are throwing out
 newdf <- na.omit(data.frame(year=acis.temp.stn$year, variable=rep(acis.temp.stn$variable, sapply(acis.temp.stn$variable, length)))) #make new dataframe, omits weather stations with too few years of data
 stations.temp <- newdf$variable #all of the variable names that we want
-clean.temp <- na.omit(acis.temp)[is.element(na.omit(acis.temp)$variable, stationstemp),] #to use for subsequent analyses
+clean.temp <- na.omit(acis.temp)[is.element(na.omit(acis.temp)$variable, stations.temp),] #to use for subsequent analyses
 
 acis.pcpn.stn <- aggregate(year ~ name + lat + lon + state, data = na.omit(acis.pcpn), FUN = length)
 acis.pcpn.stn$name[acis.pcpn.stn$year<minyears] <- NA #give NA values to values we are throwing out
 newdf <- na.omit(data.frame(year=acis.pcpn.stn$year, name=rep(acis.pcpn.stn$name, sapply(acis.pcpn.stn$name, length)))) #make new dataframe, omits weather stations with too few years of data
-stationspcpn <- newdf$name #all of the variable names that we want
-clean.pcpn <- na.omit(acis.pcpn)[is.element(na.omit(acis.pcpn)$name, stationspcpn),] #to use for subsequent analyses
+stations.pcpn <- newdf$name #all of the variable names that we want
+clean.pcpn <- na.omit(acis.pcpn)[is.element(na.omit(acis.pcpn)$name, stations.pcpn),] #to use for subsequent analyses
 
 #I have copied and pasted temp script for pcpn - this could have been made more modular by writing a function to repeat the work for me
 
@@ -107,70 +107,6 @@ dim(matrix.pcpn) #110, 67
 #Outputs: data in matrix form (matrix.temp, matrix.pcpn)
 ```
 
-<!--Chunk for data analysis-->
-```{r analysis, include=T}
-
-#Dependencies: matrix converted from dataframe (matrix.temp, matrix.pcpn)
-
-temp.reg <- lm(avg.temp~year)
-temp.pcpn <- 
-
-avg.temp <- (colMeans(matrix.temp))
-avg.pcpn <- (colMeans(matrix.pcpn))
-year <- 1950:2016
-plot(x = year, y = avg.temp)
-plot(x = year, y = avg.pcpn, type = "b", col = "blue")
-
-avg.temp <- (colMeans(matrix.temp))
-avg.pcpn <- (colMeans(matrix.pcpn))
-year <- 1950:2016
-plot(avg.temp)
-avg.temp
-
-##### MODULARITY 1:GIVING VARIABLE NAMES TO CONSTANTS #####
-
-#use apply function to calculate mean temp for each year
-
-#Outputs: linear regression statistics for temp and pcpn, scatter plots for temp and pcpn
-```
-
-<!--Chunk for making the map-->
-```{r map, include=T}
-
-
-sdate <- 1950
-map(database = "state")
-plotvar <- acis.temp$value[acis.temp$year==sdate]
-nclr <- 8
-plotclr <- brewer.pal(nclr,"PuOr")
-plotclr <- plotclr[nclr:1] # reorder colors
-class <- classIntervals(plotvar, nclr, style="equal")
-colcode <- findColours(class, plotclr)
-points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate], pch=16, col=colcode, cex=2)
-points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate], cex=2)
-title("Average annual temperature 1950",
-    sub="Equal-Interval Class Intervals")
-legend(-117, 44, legend=names(attr(colcode, "table")),
-    fill=attr(colcode, "palette"), cex=0.6, bty="n")
-
-edate <- 2016
-map(database = "state")
-plotvar <- acis.temp$value[acis.temp$year==edate]
-nclr <- 8
-plotclr <- brewer.pal(nclr,"PuOr")
-plotclr <- plotclr[nclr:1] # reorder colors
-class <- classIntervals(plotvar, nclr, style="equal")
-colcode <- findColours(class, plotclr)
-points(acis.temp$lon[acis.temp$year==edate], acis.temp$lat[acis.temp$year==edate], pch=16, col=colcode, cex=2)
-points(acis.temp$lon[acis.temp$year==edate], acis.temp$lat[acis.temp$year==edate], cex=2)
-title("Average annual temperature 2016",
-    sub="Equal-Interval Class Intervals")
-legend(-117, 44, legend=names(attr(colcode, "table")),
-    fill=attr(colcode, "palette"), cex=0.6, bty="n")
-
-#again, this could have been made more modular by writing a function
-```
-
 ## Abstract
 
 An analysis of United States weather station climate data collected between `r min(acis.temp$year)` and `r max(acis.temp$year)` suggests that anthropogenic climate change has had an effect on average annual temperature and precipitation across the United States.
@@ -187,11 +123,75 @@ All statistical analyses were conducted in R @R2014.
 
 ## Results
 
-Between `r min(acis.temp$year)` and `r max(acis.temp$year)`, mean annual temperature ranged from `r round(min(matrix.temp), digits = 2)` to `r round(max(matrix.temp), digits = 2)`, averaging `r round(mean(matrix.temp), digits = 2)`, while average annual precipitation ranged from `r min(matrix.pcpn)` to `r max(matrix.pcpn)` with a mean level of `r round(mean(matrix.pcpn), digits = 2)` overall. The data show a significant, positive regression between year and temperature (LINEAR REGRESSION, __, __).
+<!--Chunk for data analysis-->
+```{r analysis, echo=F, warning=F}
+#Dependencies: matrix converted from dataframe (matrix.temp, matrix.pcpn)
 
-- figure  
-- map
+##### MODULARITY 1:GIVING VARIABLE NAMES TO CONSTANTS #####
+avg.temp <- (colMeans(matrix.temp))
+avg.pcpn <- (colMeans(matrix.pcpn))
+year <- 1950:2016
+
+temp.lm <- lm(avg.temp~year, data = as.data.frame(matrix.temp))
+temp.sum <- summary(temp.lm)
+
+pcpn.lm <- lm(avg.pcpn~year, data = as.data.frame(matrix.pcpn))
+pcpn.sum <- summary(pcpn.lm)
+
+#Outputs: linear regression statistics for temp and pcpn, (side effect) scatter plots for temp and pcpn, variabl
+```
+
+Between `r min(acis.temp$year)` and `r max(acis.temp$year)`, mean annual temperature ranged from `r round(min(avg.temp), digits = 2)` to `r round(max(avg.temp), digits = 2)` &deg;F, averaging `r round(mean(matrix.temp), digits = 2)` &deg;F, while average annual precipitation ranged from `r round(min(avg.pcpn), digits = 2)` to `r round(max(avg.pcpn), digits = 2)` inches with a mean level of `r round(mean(matrix.pcpn), digits = 2)` inches overall. A significant, positive relationship was observed between year and average temperature (F = `r round(temp.sum$fstatistic, digits = 2)`, p<0.001, R^2=0.40). A significant relationship was also observed between year and average precipitation (F = `r round(pcpn.sum$fstatistic, digits = 2)`, p<0.001, R^2=0.04).
+
+<!--Chunk for plots-->
+```{r plots, echo=F, warning=F}
+
+#Dependencies: avg.
+plot(x = year, y = avg.temp, type = "b", col = "red", 
+     xlab = "", ylab = "Average Annual Temperature (&deg;F)", xaxt = "n")
+plot(x = year, y = avg.pcpn, type = "b", col = "blue",
+     xlab = "Year", ylab = "Average Annual Precipitation (in)")
+
+```
+
+<!--Chunk for making 1950 map-->
+```{r 1950, echo=F, warning=F}
+
+#Dependencies: acis.temp and acis.pcpn dataframes
+
+sdate <- 1950
+map(database = "state")
+plotvar <- acis.temp$value[acis.temp$year==sdate]
+nclr <- 8
+plotclr <- brewer.pal(nclr,"PuOr")
+plotclr <- plotclr[nclr:1] # reorder colors
+class <- classIntervals(plotvar, nclr, style="equal")
+colcode <- findColours(class, plotclr)
+points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate], pch=20, col=colcode, cex=1)
+
+#Output: Tried making a map but wish I could have figured out how to make 1 map with 2016-1950 temperature differences at each weather station
+```
+
+<!--Chunk for making 2016 map-->
+```{r 2016, echo=F, warning=F, fig.cap="Relative annual average temperature in the United States in 1950 (top) and 2016 (bottom)"}
+
+#Dependencies: acis.temp and acis.pcpn dataframes
+
+edate <- 2016
+map(database = "state")
+plotvar <- acis.temp$value[acis.temp$year==edate]
+nclr <- 8
+plotclr <- brewer.pal(nclr,"PuOr")
+plotclr <- plotclr[nclr:1] # reorder colors
+class <- classIntervals(plotvar, nclr, style="equal")
+colcode <- findColours(class, plotclr)
+points(acis.temp$lon[acis.temp$year==edate], acis.temp$lat[acis.temp$year==edate], pch=20, col=colcode, cex=1)
+
+#Output: Tried making a map but wish I could have figured out how to make 1 map with 2016-1950 temperature differences at each weather station. I also cannot figure out how to get the maps to line up in the knitted pdf
+```
 
 ## Discussion
+
+The results of this study show significant changes in average annual temperature and precipitation in the United States between the years of `r min(acis.temp$year)` and `r max(acis.temp$year)`, which provides evidence of the widespread effects of climate change previously reported @Loarie2009. Increases in temperature is expected to have drastic effects on our natural communities and economy @Schlenker2009. While average annual precipitation was relatively similar between year 1950 and year 2016, we expect that precipitation changes are seen at a smaller scale, with less predictable, light rainfall and increasing variability in the form of alternating droughts and floods @Trenberth2003.
 
 ## References
