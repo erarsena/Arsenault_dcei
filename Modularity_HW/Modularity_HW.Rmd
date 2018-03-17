@@ -141,10 +141,10 @@ pcpn.sum <- summary(pcpn.lm)
 #Outputs: linear regression statistics for temp and pcpn, (side effect) scatter plots for temp and pcpn, variabl
 ```
 
-Between `r min(acis.temp$year)` and `r max(acis.temp$year)`, mean annual temperature ranged from `r round(min(avg.temp), digits = 2)` to `r round(max(avg.temp), digits = 2)` &deg;F, averaging `r round(mean(matrix.temp), digits = 2)` &deg;F, while average annual precipitation ranged from `r round(min(avg.pcpn), digits = 2)` to `r round(max(avg.pcpn), digits = 2)` inches with a mean level of `r round(mean(matrix.pcpn), digits = 2)` inches overall. A significant, positive relationship was observed between year and average temperature (F = `r round(temp.sum$fstatistic, digits = 2)`, p<0.001, R^2=0.40). A significant relationship was also observed between year and average precipitation (F = `r round(pcpn.sum$fstatistic, digits = 2)`, p<0.001, R^2=0.04).
+Between `r min(acis.temp$year)` and `r max(acis.temp$year)`, mean annual temperature ranged from `r round(min(avg.temp), digits = 2)` to `r round(max(avg.temp), digits = 2)` &deg;F, averaging `r round(mean(matrix.temp), digits = 2)` &deg;F (Figure 1, 2). Average annual precipitation ranged from `r round(min(avg.pcpn), digits = 2)` to `r round(max(avg.pcpn), digits = 2)` inches with a mean level of `r round(mean(matrix.pcpn), digits = 2)` inches overall (Figure 1, 2). A significant, positive relationship was observed between year and average temperature (F = `r round(temp.sum$fstatistic, digits = 2)`, p<0.001, $R^2=0.40$). A significant relationship was also observed between year and average precipitation (F = `r round(pcpn.sum$fstatistic, digits = 2)`, p<0.001, $R^2$=0.04).
 
 <!--Chunk for plots-->
-```{r plots, echo=F, warning=F}
+```{r plots, echo=F, warning=F, fig.cap="Average annual temperature (top) and precipitation (bottom) from weather stations across the United States"}
 
 #Dependencies: avg.
 plot(x = year, y = avg.temp, type = "b", col = "red", 
