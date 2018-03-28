@@ -7,3 +7,9 @@ data/*
 *.rds
 *.pdf
 *.history
+Modularity_HW/ACISimport.R
+Modularity_HW/Modularity_HW_cache/latex/__packages
+Modularity_HW/Modularity_HW_Arsenaul.Rmd
+Modularity_HW/Modularity_HW_cache/latex/import_44c27b1a41a13b6d25e8c1fce6ef2dd3.RData
+Modularity_HW/Modularity_HW_cache/latex/import_44c27b1a41a13b6d25e8c1fce6ef2dd3.rdb
+Modularity_HW/Modularity_HW_cache/latex/import_44c27b1a41a13b6d25e8c1fce6ef2dd3.rdx
