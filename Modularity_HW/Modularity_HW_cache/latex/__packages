@@ -5,3 +5,7 @@ httr
 lubridate
 qdapRegex
 jsonlite
+reshape2
+mapdata
+RColorBrewer
+classInt
