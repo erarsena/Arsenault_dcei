@@ -5,3 +5,5 @@
 rds/*
 data/*
 *.rds
+*.pdf
+*.history
