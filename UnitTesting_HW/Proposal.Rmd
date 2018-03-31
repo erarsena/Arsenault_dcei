@@ -5,26 +5,15 @@ date: "March 28, 2018"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+## The dataset
 
-## R Markdown
+Looking at an old data set of Jim's
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+He determined several different hydrogeomorpholoical zones (FPZs) of the Missisippi River and collected mussels and fish from each of these sites
+  
+## The question
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+How does food chain length (FCL) vary with ecosystem size?
+  Calculate baseline primary producer d15N signature
+  Use that to calculate trophic positions for each individual fish
+  Use that to find maximum trophic position (FCL) at each site
