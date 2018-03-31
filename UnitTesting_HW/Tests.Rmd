@@ -4,3 +4,49 @@ author: "Emily Arsenault"
 date: "March 28, 2018"
 output: pdf_document
 ---
+
+## Tests for base_sig
+
+Test that it can find the correct mean for site 1a
+
+```{r base_sig_test_1, echo=T}
+muss <- read.csv("muss.csv")
+h<-base_sig(muss, frac)
+if (mean(h[site=="1a"])==2.55)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
+```
+
+## Tests for tp_calc
+
+```{r base_sig_test_1, echo=T}
+muss <- read.csv()
+by <- site
+h<-base_sig(muss, by)
+if (mean(h)==2.55)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
+```
+
+## Tests for fcl_calc
+
+```{r base_sig_test_1, echo=T}
+muss <- read.csv()
+by <- site
+h<-base_sig(muss, by)
+if (mean(h)==2.55)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
+```

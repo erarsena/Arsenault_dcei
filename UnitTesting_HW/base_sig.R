@@ -2,7 +2,7 @@
 #
 #Args
 #muss      A dataframe with d15N data for mussels at different sites along a river
-#by        The column populated by site number (default = site)
+#frac      Trophic discrimination factor used to calculate trophic position (default = 3.4)
 #
 #Output - a dataframe with these columns
 #site     Site along river
@@ -10,7 +10,11 @@
 
 base_sig <- function(dat, by) {
   
-  #for each site in column by
-    #find the mean d15N from column
+  #read in data
+ 
+  #for each mussel (row) in muss
+    #calculate primary producer signature by subtracing frac from d15N value
+      #find the mean d15N by site (by)
+  #report dataframe (site, base)
+  
 }
-

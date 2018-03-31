@@ -7,11 +7,13 @@ output: pdf_document
 
 ## The dataset
 
-Looking at an old data set of Jim's
+Looking at an old data set from the Mississippi River, POC study but never analyzed
 
-He determined several different hydrogeomorpholoical zones (FPZs) of the Missisippi River and collected mussels and fish from each of these sites
+They determined several different hydrogeomorpholoical zones (FPZs) of the Missisippi River and collected mussels and fish from each of these sites
+
+Want to understand effects of FPZ on species richness, food chain length, food web structure (Layman's metrics)
   
-## The question
+## A question (functions and tests for deadline 1)
 
 How does food chain length (FCL) vary with ecosystem size?
   Calculate baseline primary producer d15N signature
