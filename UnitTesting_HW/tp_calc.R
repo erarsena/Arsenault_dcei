@@ -7,6 +7,7 @@
 #Output -  A dataframe with these columns
 #site      Site along river
 #species   Fish species (character class)
+#id        ID number for individual fish
 #tp        Trophic position
 #
 tp_calc <- function(fish, frac=3.4) {
@@ -16,5 +17,7 @@ tp_calc <- function(fish, frac=3.4) {
   
   #for(each fish (row) in the dataset)
     #use the output of base_sig to calculate trophic position
+  
+  return(as.data.frame(c(site, species, id, tp)))
   
 }

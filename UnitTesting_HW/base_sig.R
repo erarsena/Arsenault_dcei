@@ -15,6 +15,6 @@ base_sig <- function(dat, by) {
   #for each mussel (row) in muss
     #calculate primary producer signature by subtracing frac from d15N value
       #find the mean d15N by site (by)
-  #report dataframe (site, base)
+  return(as.data.frame(c(site, base)))
   
 }

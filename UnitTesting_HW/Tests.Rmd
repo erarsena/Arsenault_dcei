@@ -7,11 +7,11 @@ output: pdf_document
 
 ## Tests for base_sig
 
-Test that it can find the correct mean for site 1a
+Test that it can find the correct primary producer signature mean for site 1a
 
 ```{r base_sig_test_1, echo=T}
 muss <- read.csv("muss.csv")
-h<-base_sig(muss, frac)
+h <- base_sig(muss, frac)
 if (mean(h[site=="1a"])==2.55)
 {
   print("passed")
@@ -23,11 +23,12 @@ if (mean(h[site=="1a"])==2.55)
 
 ## Tests for tp_calc
 
-```{r base_sig_test_1, echo=T}
-muss <- read.csv()
-by <- site
-h<-base_sig(muss, by)
-if (mean(h)==2.55)
+Test to make sure that no fish trophic position is less than 2 or greater than 5 (if it is, it was calculated incorrectly)
+
+```{r tp_calc_test_1, echo=T}
+fish <- read.csv("fish.csv")
+h <- tp_calc(fish, frac=3.4)
+if (h[tp<2 | tp>5])
 {
   print("passed")
 } else
@@ -36,13 +37,41 @@ if (mean(h)==2.55)
 }
 ```
 
+Tests that it calculates tp correctly for one specific data point
+
+```{r tp_calc_test_2, echo=T}
+fish <- read.csv("fish.csv")
+h <- tp_calc(fish, frac=3.4)
+if (round(h[[id==1001]][tp==3.53], digits=2))
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
+```
+  
 ## Tests for fcl_calc
 
-```{r base_sig_test_1, echo=T}
-muss <- read.csv()
-by <- site
-h<-base_sig(muss, by)
-if (mean(h)==2.55)
+Test to make sure an FCL value was calculated for all 12 sites in the dataset
+
+```{r fcl_calc_test_1, echo=T}
+h <- fcl_calc(fish, frac)
+if (nrow(h)==12)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
+```
+
+Test to make sure that FCL was calculated correctly for site 1a
+
+```{r fcl_calc_test_2, echo=T}
+fish <- read.csv("fish.csv")
+h <- fcl_calc(fish, frac)
+if (round(h[[site=="1a"]][maxtp==4.20], digits = 2))
 {
   print("passed")
 } else
