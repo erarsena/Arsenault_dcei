@@ -5,14 +5,20 @@ date: "March 28, 2018"
 output: pdf_document
 ---
 
+```{r, echo=T}
+source("base_sig.R")
+```
+
 ## Tests for base_sig
 
-Test that it can find the correct primary producer signature mean for site 1a
+Test that it can find the correct primary producer signature mean for site "WIN1"
 
 ```{r base_sig_test_1, echo=T}
 muss <- read.csv("muss.csv")
-h <- base_sig(muss, frac)
-if (mean(h[site=="1a"])==2.55)
+sitename <- "WIN1"
+frac <- 3.4
+h <- base_sig(sitename, frac)
+if(round(h, digits = 3)==7.287)
 {
   print("passed")
 } else

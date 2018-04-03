@@ -45,6 +45,15 @@ How does food chain length (FCL) vary with ecosystem size?
   
 ## Methods
 
+```{r analysis, echo=F}
+muss <- read.csv("muss.csv", header = T)
+fish <- read.csv("fish.csv", header = T)
+source("base_sigs.R")
+source("tp_calc.R")
+source("fcl_calc.R")
+#res<-find_microsats(seq=dat,lenmin=2,lenmax=6,repmin=30)
+```
+
 ## Results
 
 ## Discussion
