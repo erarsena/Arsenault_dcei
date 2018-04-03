@@ -1,21 +1,52 @@
 ---
-title: "Proposal"
+title: "Trophic relationships in a Mississippi River macrosystem"
 author: "Emily Arsenault"
-date: "March 28, 2018"
+date: "April 9, 2018"
 output: pdf_document
 ---
+<!--Chunk for package reproducibility-->
+```{r checkpoint, echo=F, include=F}
 
-## The dataset
+#install.packages("checkpoint")
+#install.packages("plyr") #working with datasets
+
+#library(classInt)
+#library(checkpoint)
+#checkpoint("2018-03-01")
+
+```
+
+<!--Chunk for importing the data-->
+```{r import, echo=F}
+
+read.csv("muss.csv", header = T)
+
+```
+
+<!--Chunk for cleaning up the data-->
+remove NA vals from isotope data, but need those data for richness/abundance still (or not, since richness was not accurately sampled anyways)
+```{r, echo=F}
+
+```
+
+## Abstract
+
+## Introduction
 
 Looking at an old data set from the Mississippi River, POC study but never analyzed
 
 They determined several different hydrogeomorpholoical zones (FPZs) of the Missisippi River and collected mussels and fish from each of these sites
 
 Want to understand effects of FPZ on species richness, food chain length, food web structure (Layman's metrics)
-  
-## A question (functions and tests for deadline 1)
-
 How does food chain length (FCL) vary with ecosystem size?
   Calculate baseline primary producer d15N signature
   Use that to calculate trophic positions for each individual fish
   Use that to find maximum trophic position (FCL) at each site
+  
+## Methods
+
+## Results
+
+## Discussion
+
+## Literature Cited
