@@ -9,18 +9,30 @@ output: pdf_document
 
 #install.packages("checkpoint")
 #install.packages("plyr") #working with datasets
+#install.packages("mapdata") #mapping
+#install.packages("RColorBrewer") #color spectra
+#install.packages("maps") #mapping
+#install.packages("maptools") #mapping
+#install.packages("rgdal")
+#install.packages("ggplot2")
 
-#library(classInt)
-#library(checkpoint)
+library(checkpoint)
+library(plyr)
+library(mapdata)
+library(RColorBrewer)
+library(maps)
+library(maptools)
+library(rgdal)
+library(ggplot2)
+
 #checkpoint("2018-03-01")
 
 ```
 
 <!--Chunk for importing the data-->
 ```{r import, echo=F}
-
-read.csv("muss.csv", header = T)
-
+muss <- read.csv("muss.csv", header = T) #primary producer signature data (mussels)
+fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, and isotope data
 ```
 
 <!--Chunk for cleaning up the data-->
@@ -43,7 +55,49 @@ How does food chain length (FCL) vary with ecosystem size?
   Use that to calculate trophic positions for each individual fish
   Use that to find maximum trophic position (FCL) at each site
   
+<!--Chunk for making a map of the study sites-->
+```{r map, echo=F}
+#Dependencies: acis.temp and acis.pcpn dataframes
+
+map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa"))
+shapeData <- readOGR("~/Documents/DataCarpentry/Arsenault_dcei/UnitTesting_HW", "ne_50m_rivers_lake_centerlines")
+
+library(raster)
+#setwd("...")
+v0 <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa"))
+plot(v0, border = "red")
+title(main = "Tanzania national boundary", sub = "source GADM")
+
+rv <- shapefile("ne_50m_rivers_lake_centerlines.shp")
+plot(v0, border = "red", lwd = 2, axes = TRUE)
+plot(rv, col='blue', add = TRUE)
+title(main = "Tanzania rivers")
+# Add some more details
+legend('topright', legend = 'River', lty = 1, lwd = 2, col = 'blue', bty = "n")
+
+
+plotvar <- acis.temp$value[acis.temp$year==sdate]
+nclr <- 8
+plotclr <- brewer.pal(nclr,"PuOr")
+plotclr <- plotclr[nclr:1] # reorder colors
+class <- classIntervals(plotvar, nclr, style="equal")
+colcode <- findColours(class, plotclr)
+points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate], pch=20, col=colcode, cex=1)
+
+#Output: Tried making a map but wish I could have figured out how to make 1 map with 2016-1950 temperature differences at each weather station
+```
+
 ## Methods
+
+### Study Sites
+
+This study was conducted between the months of May and July 2010 in the Upper Mississippi River watershed, from a tributary of its headwaters to its main channel just above its confluence with the Illinois and Missouri Rivers (Figure 1). 
+
+### Fish and Mussel Collection
+
+### Stable Isotope Analysis
+
+### Statistical Analysis
 
 ```{r analysis, echo=F}
 muss <- read.csv("muss.csv", header = T)
