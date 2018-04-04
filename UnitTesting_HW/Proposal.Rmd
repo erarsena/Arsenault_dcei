@@ -41,9 +41,9 @@ remove NA vals from isotope data, but need those data for richness/abundance sti
 
 ```
 
-## Abstract
+## **Abstract**
 
-## Introduction
+## **Introduction**
 
 Looking at an old data set from the Mississippi River, POC study but never analyzed
 
@@ -59,57 +59,41 @@ How does food chain length (FCL) vary with ecosystem size?
 ```{r map, echo=F}
 #Dependencies: acis.temp and acis.pcpn dataframes
 
-map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa"))
-shapeData <- readOGR("~/Documents/DataCarpentry/Arsenault_dcei/UnitTesting_HW", "ne_50m_rivers_lake_centerlines")
-
-library(raster)
-#setwd("...")
-v0 <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa"))
-plot(v0, border = "red")
-title(main = "Tanzania national boundary", sub = "source GADM")
-
-rv <- shapefile("ne_50m_rivers_lake_centerlines.shp")
-plot(v0, border = "red", lwd = 2, axes = TRUE)
-plot(rv, col='blue', add = TRUE)
-title(main = "Tanzania rivers")
-# Add some more details
-legend('topright', legend = 'River', lty = 1, lwd = 2, col = 'blue', bty = "n")
-
-
-plotvar <- acis.temp$value[acis.temp$year==sdate]
-nclr <- 8
-plotclr <- brewer.pal(nclr,"PuOr")
-plotclr <- plotclr[nclr:1] # reorder colors
-class <- classIntervals(plotvar, nclr, style="equal")
-colcode <- findColours(class, plotclr)
-points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate], pch=20, col=colcode, cex=1)
+#map <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa"))
+#map <- readOGR("~/Documents/DataCarpentry/Arsenault_dcei/UnitTesting_HW", "cb_2016_us_state_20m")
+#shapeData <- readOGR("~/Documents/DataCarpentry/Arsenault_dcei/UnitTesting_HW", "ne_50m_rivers_lake_centerlines")
+#plot(map)
+#plot(shapeData, add=T, exact=T)
+#need to clip to just show US and only mississippi river states
 
 #Output: Tried making a map but wish I could have figured out how to make 1 map with 2016-1950 temperature differences at each weather station
 ```
 
-## Methods
+## **Methods**
 
-### Study Sites
+### *Study Sites*
 
 This study was conducted between the months of May and July 2010 in the Upper Mississippi River watershed, from a tributary of its headwaters to its main channel just above its confluence with the Illinois and Missouri Rivers (Figure 1). 
 
-### Fish and Mussel Collection
+### *Fish and Mussel Collection*
 
-### Stable Isotope Analysis
+### *Stable Isotope Analysis*
 
-### Statistical Analysis
+### *Statistical Analysis*
+
+![placeholder site map](watershed.jpg)
 
 ```{r analysis, echo=F}
 muss <- read.csv("muss.csv", header = T)
 fish <- read.csv("fish.csv", header = T)
-source("base_sigs.R")
+source("base_sig.R")
 source("tp_calc.R")
 source("fcl_calc.R")
 #res<-find_microsats(seq=dat,lenmin=2,lenmax=6,repmin=30)
 ```
 
-## Results
+## **Results**
 
-## Discussion
+## **Discussion**
 
-## Literature Cited
+## **References**

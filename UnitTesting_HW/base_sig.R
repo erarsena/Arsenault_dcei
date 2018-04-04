@@ -1,15 +1,21 @@
-#Takes mussel d15N signature data seperated by site 
-#and returns a vector with two values (site name and mean primary producer signature for that site)
+#Takes mussel d15N signature data separated by site and returns a dataframe with two columns
 #
 #Args
-#sitename     The name of one site 
-#frac         Trophic discrimination factor used to calculate trophic position (default = 3.4)
+#dat      The dataset 
+#frac     Trophic discrimination factor used to calculate trophic position (default = 3.4, most commonly accepted)
 #
-#Output
-#base         A single number equal to mean primary producer signature at sitename
+#Output - a data frame with these
+#base     A single number equal to mean primary producer signature at sitename
 
-base_sig <- function(sitename, frac) {
+dat <- read.csv("muss.csv", header = T)
+base_sig <- function(dat, frac=3.4) {
   frac <- 3.4
-  base <- mean((muss$d15N-frac)[muss$site==sitename])
-  return(base)
+  site <- levels(muss$site)
+  base <- vector(mode = "numeric")
+  for(i in site) {
+    base[i] <- mean(muss$d15N[muss$site==i])
+  }
+  df <- data.frame(site, base)
+  colnames(df) <- c("Site", "Baseline")
+  return(df)
 }
