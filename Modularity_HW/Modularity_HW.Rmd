@@ -6,6 +6,9 @@ fontsize: 12pt
 bibliography: datacarpentry.bib
 csl: science.csl
 ---
+
+<!--***DAN: Good use of git-->
+
 <!--Chunk for package reproducibility-->
 ```{r checkpoint, echo=F, include=F}
 #install.packages("checkpoint")
@@ -18,6 +21,7 @@ csl: science.csl
 #install.packages("qdapRegex") #regular expression tools
 #install.packages("jsonlite") #working with json data
 
+
 library(reshape2)
 library(maps)
 library(mapdata)
@@ -26,6 +30,8 @@ library(classInt)
 library(checkpoint)
 checkpoint("2018-03-01")
 ```
+
+<!--***DAN: Well done with checkpoint-->
 
 <!--Chunk for importing the data-->
 ```{r import, include=F, echo=F, cache=T}
@@ -62,6 +68,9 @@ acis.pcpn <- readRDS("USAAnnualPcpn1950_2016.rds")
 #Outputs: variable for rds data files (acis.temp; acis.pcpn) imported, loaded into R, and saved to directory as variables
 ```
 
+<!--***DAN: Well done getting the acis download to work!-->
+<!--***DAN: Very nice use of chunks as modules-->
+
 <!--Chunk for removing weather stations with too few years of data-->
 ```{r cleaning, include=F}
 
@@ -93,6 +102,8 @@ clean.pcpn <- na.omit(acis.pcpn)[is.element(na.omit(acis.pcpn)$name, stations.pc
 #Outputs: cleaned up dataset (clean.temp, clean.pcpn)
 ```
 
+<!--***DAN: Good observation above on modularty, and wel done being aware of weaknesses as well as strengths.-->
+
 <!--Chunk for changing format from data frame to matrix-->
 ```{r matrix, include=F}
 
@@ -107,6 +118,8 @@ dim(matrix.pcpn) #110, 67
 #Outputs: data in matrix form (matrix.temp, matrix.pcpn)
 ```
 
+<!--***DAN: I did not know about acast, nice work-->
+
 ## Abstract
 
 An analysis of United States weather station climate data collected between `r min(acis.temp$year)` and `r max(acis.temp$year)` suggests that anthropogenic climate change has had an effect on average annual temperature and precipitation across the United States.
@@ -119,6 +132,7 @@ Periods of warming and cooling are natural phenomena throughout the history of t
 ## Methods
 
 Average annual temperature and precipitation data from weather stations across the United States were reported by the American Meteorological Society through the Applied Climate Information System (ACIS) @Hubbard2004. Temperature and precipitation data was collected between the years of `r min(acis.temp$year)` and `r max(acis.temp$year)`. Weather stations with less than `r minyears` total years of data were not considered as part of subsequent analyses. In total, `r length(unique(acis.temp$year))` years of climate data (`r min(acis.temp$year)`-`r max(acis.temp$year)`) from `r nrow(matrix.temp)` weather stations were included as part of the analysis.
+<!--***DAN: This ended up saying 71 weather stations, but the maps make it seem like a lot more than that. Problem?-->
 All statistical analyses were conducted in R @R2014.
 
 ## Results
@@ -141,7 +155,11 @@ pcpn.sum <- summary(pcpn.lm)
 #Outputs: linear regression statistics for temp and pcpn, (side effect) scatter plots for temp and pcpn, variabl
 ```
 
-Between `r min(acis.temp$year)` and `r max(acis.temp$year)`, mean annual temperature ranged from `r round(min(avg.temp), digits = 2)` to `r round(max(avg.temp), digits = 2)` &deg;F, averaging `r round(mean(matrix.temp), digits = 2)` &deg;F (Figure 1, 2). Average annual precipitation ranged from `r round(min(avg.pcpn), digits = 2)` to `r round(max(avg.pcpn), digits = 2)` inches with a mean level of `r round(mean(matrix.pcpn), digits = 2)` inches overall (Figure 1, 2). A significant, positive relationship was observed between year and average temperature (F = `r round(temp.sum$fstatistic, digits = 2)`, p<0.001, $R^2=0.40$). A significant relationship was also observed between year and average precipitation (F = `r round(pcpn.sum$fstatistic, digits = 2)`, p<0.001, $R^2$=0.04).
+Between `r min(acis.temp$year)` and `r max(acis.temp$year)`, mean annual temperature ranged from `r round(min(avg.temp), digits = 2)` to `r round(max(avg.temp), digits = 2)` &deg;F, averaging `r round(mean(matrix.temp), digits = 2)` &deg;F (Figure 1, 2). Average annual precipitation ranged from `r round(min(avg.pcpn), digits = 2)` to `r round(max(avg.pcpn), digits = 2)` inches with a mean level of `r round(mean(matrix.pcpn), digits = 2)` inches overall (Figure 1, 2). A significant, positive relationship was observed between year and average temperature (F = `r round(temp.sum$fstatistic, digits = 2)`, p<0.001, $R^2=0.40$). 
+<!--***DAN: Regression against year is technically not a valid way to assess significant changes through time because of autocorrelation.-->
+A significant relationship was also observed between year and average precipitation (F = `r round(pcpn.sum$fstatistic, digits = 2)`, p<0.001, $R^2$=0.04).
+<!--***DAN: Why is the p-value typed by hand?-->
+<!--***DAN: According to the plot, the relationship is obviously not linear, so giving this p-value is not statistically valid (though the computation is well done).-->
 
 <!--Chunk for plots-->
 ```{r plots, echo=F, warning=F, fig.cap="Average annual temperature (top) and precipitation (bottom) from weather stations across the United States"}
@@ -172,6 +190,8 @@ points(acis.temp$lon[acis.temp$year==sdate], acis.temp$lat[acis.temp$year==sdate
 #Output: Tried making a map but wish I could have figured out how to make 1 map with 2016-1950 temperature differences at each weather station
 ```
 
+<!--***DAN: Given more time, I bet yu could have-->
+
 <!--Chunk for making 2016 map-->
 ```{r 2016, echo=F, warning=F, fig.cap="Relative annual average temperature in the United States in 1950 (top) and 2016 (bottom)"}
 
@@ -195,3 +215,7 @@ points(acis.temp$lon[acis.temp$year==edate], acis.temp$lat[acis.temp$year==edate
 The results of this study show significant changes in average annual temperature and precipitation in the United States between the years of `r min(acis.temp$year)` and `r max(acis.temp$year)`, which provides evidence of the widespread effects of climate change previously reported @Loarie2009. Increases in temperature is expected to have drastic effects on our natural communities and economy @Schlenker2009. While average annual precipitation was relatively similar between year 1950 and year 2016, we expect that precipitation changes are seen at a smaller scale, with less predictable, light rainfall and increasing variability in the form of alternating droughts and floods @Trenberth2003.
 
 ## References
+
+
+<!--***DAN: You did a great job on the mdoularity-->
+<!--***DAN: The paper is really good too given the time frame. Overall very well done!-->
