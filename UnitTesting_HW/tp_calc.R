@@ -26,28 +26,24 @@ base_sig <- function(muss, frac=3.4) {
 
 ####
 
-#this one is for each fish individual, the next one averages that out for each site
-fish <- read.csv("fish.csv", header = T)
+#For each value in column A, do this formula to it and put it in a new column (X)
+#(could just have one function to populate new column (maybe use levels?) and then do the actual calculation in seperate function!)
+
+value <- fish$site
+basesite <- baseline$Site
+basesig <- baseline$Baseline
+
+#I think this one actually worked
 baseline <- base_sig(muss, 3.4)
-tp_calc <- function(fish, frac=3.4, baseline) {
-  tp <- vector(mode = "numeric")
-  fishy <- fish$id
-  megahabitat <- fish$____
-  for(i in fishy) {
-  tp[i] <- (((fishy-baseline)/3.4)+1)
-}
-  tpdf <- data.frame(site, megahabitat, species, id, tp)
-  colnames(tpdf) <- c("Site", "Megahabitat", "Species", "ID", "Trophic Position")
+fish <- read.csv("fish.csv", header = T)
+tp_calc <- function(fish, frac=3.4){
+  for(i in 1:length(fish$site)) {
+    if(fish$site %in% baseline$Site) {
+      fish$tp[i] <- (((fish$d15N-baseline$Baseline)/3.4)+1)[i]
+    }
+  }
+  tpdf <- data.frame(fish$site, fish$tp)
   return(tpdf)
 }
 
-
-#For each value in column A, do this formula to it and put it in a new column (X)
-
-trophic <- na.omit(fish$d15N)
-tp <- vector()
-for(i in trophic) {
-  tp <- (i/3.4)+1
-  tp <- m
-}
-#TP = ((fish d15N-mean pp sig)/frac)+1
+#unit test
