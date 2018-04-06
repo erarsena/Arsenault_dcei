@@ -20,3 +20,15 @@ fcl_calc <- function(fish, frac=3.4) {
   return(as.data.frame(c(site, species, id, maxtp)))
   
 }
+
+tpdf <- tp_calc(fish, 3.4)
+fcl_calc <- function(tpdf, frac=3.4) {
+  site <- levels(tpdf$site)
+  base <- vector(mode = "numeric")
+  for(i in site) {
+    base[i] <- mean(muss$d15N[muss$site==i]-frac)
+  }
+  mussdf <- data.frame(site, base)
+  colnames(mussdf) <- c("Site", "Baseline")
+  return(mussdf)
+}

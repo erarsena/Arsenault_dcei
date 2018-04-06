@@ -12,9 +12,9 @@ base_sig <- function(muss, frac=3.4) {
   site <- levels(muss$site)
   base <- vector(mode = "numeric")
   for(i in site) {
-    base[i] <- mean(muss$d15N[muss$site==i])
+    base[i] <- mean(muss$d15N[muss$site==i]-frac)
   }
   mussdf <- data.frame(site, base)
-  colnames(mussdf) <- c("Site", "Baseline")
+  colnames(mussdf) <- c("site", "Baseline")
   return(mussdf)
 }
