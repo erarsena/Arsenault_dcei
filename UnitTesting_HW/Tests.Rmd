@@ -15,7 +15,6 @@ Test that it can find the correct primary producer signature mean for site "WIN1
 
 ```{r base_sig_test_1, echo=T}
 sitetest <- "WIN1"
-muss <- read.csv("muss.csv")
 frac <- 3.4
 h <- base_sig(muss, frac)
 if(round(h[sitetest,2], digits = 3)==10.687)
