@@ -7,6 +7,7 @@ data/*
 *.rds
 *.pdf
 *.history
+*.jpg
 Modularity_HW/ACISimport.R
 Modularity_HW/Modularity_HW_cache/latex/__packages
 Modularity_HW/Modularity_HW_Arsenaul.Rmd
