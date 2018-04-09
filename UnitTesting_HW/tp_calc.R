@@ -12,6 +12,8 @@
 #id        ID number for individual fish
 #tp        Trophic position
 #
+#Note: assumes that ID numbers are not repeated among different sites of the same project
+
 muss <- read.csv("muss.csv", header = T)
 base_sig <- function(muss, frac=3.4) {
   site <- levels(muss$site)
@@ -62,5 +64,28 @@ tp_calc <- function(fish, frac=3.4){
   colnames(tpdf) <- c("Site", "d15N", "Species", "ID", "Trophic Position")
   return(tpdf)
 }
+####### this one is better, actually gives right answer
+mussdf <- base_sig(muss, 3.4)
+fish <- read.csv("fish.csv", header = T)
+tp_calc <- function(fish, frac=3.4){
+  df <- merge(mussdf, fish, by = "site")
+  df$tp <- ((((df$d15N-df$baseline))/frac)+1)
+  tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp)
+  colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")
+  return(tpdf)
+}
+#ID=136
 
-testfish <- merge(mussdf, fish, by = "site") #just do the merge and instead of using %in%
+#####
+mussdf <- base_sig(muss, 3.4)
+fish <- na.omit(read.csv("fish.csv", header = T))
+tp_calc <- function(fish, frac=3.4){
+  df <- merge(mussdf, fish, by = "site")
+  for(i in df$site) {
+      df$tp[i] <- ((((df$d15N-df$baseline)[i])/frac)+1)  
+      }
+  tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp)
+  colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")
+  return(tpdf)
+}
+

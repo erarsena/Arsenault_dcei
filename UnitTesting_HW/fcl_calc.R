@@ -24,11 +24,13 @@ fcl_calc <- function(fish, frac=3.4) {
 tpdf <- tp_calc(fish, 3.4)
 fcl_calc <- function(tpdf, frac=3.4) {
   site <- levels(tpdf$site)
-  base <- vector(mode = "numeric")
+  fcl <- vector(mode = "numeric")
   for(i in site) {
-    base[i] <- mean(muss$d15N[muss$site==i]-frac)
+    fcl[i] <- mean(tpdf$tp[tpdf$site==i])
+    species[i] <- tpdf$fcl[tpdf$species]
   }
-  mussdf <- data.frame(site, base)
-  colnames(mussdf) <- c("Site", "Baseline")
-  return(mussdf)
+  plot(x = df$d13C, y = df$d15N, col = c("red", "blue", "green", "black"))
+  fcldf <- data.frame(site, tpdf$species, fcl)
+  colnames(fcldf) <- c("Site", "Species", "Food Chain Length")
+  return(fcldf)
 }

@@ -84,11 +84,11 @@ This study was conducted between the months of May and July 2010 in the Upper Mi
 ![placeholder site map](watershed.jpg)
 
 ```{r analysis, echo=F}
-muss <- read.csv("muss.csv", header = T)
-fish <- read.csv("fish.csv", header = T)
-source("base_sig.R")
-source("tp_calc.R")
-source("fcl_calc.R")
+#muss <- read.csv("muss.csv", header = T)
+#fish <- read.csv("fish.csv", header = T)
+#source("base_sig.R")
+#source("tp_calc.R")
+#source("fcl_calc.R")
 #res<-find_microsats(seq=dat,lenmin=2,lenmax=6,repmin=30)
 ```
 
