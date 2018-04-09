@@ -7,17 +7,20 @@ output: pdf_document
 
 ```{r, echo=T}
 source("base_sig.R")
+source("tp_calc.R")
+source("fcl_calc.R")
+source("plot_web.R")
 ```
 
 ## Tests for base_sig
 
-Test that it can find the correct primary producer signature mean for site "WIN1"
+Test that it can find the correct primary producer signature mean for site "WIN"
 
 ```{r base_sig_test_1, echo=T}
-sitetest <- "WIN1"
+sitetest <- "WIN"
 frac <- 3.4
 h <- base_sig(muss, frac)
-if(round(h[sitetest,2], digits = 3)==10.687)
+if(round(h[sitetest,2], digits = 3)==7.287)
 {
   print("passed")
 } else
@@ -28,12 +31,12 @@ if(round(h[sitetest,2], digits = 3)==10.687)
 
 ## Tests for tp_calc
 
-Test to make sure that no fish trophic position is less than 2 or greater than 5 (if it is, it was calculated incorrectly)
+Test to make sure that no fish trophic position is less than the minimum trophic position that we observed or greater than the maximum trophic position observed (if it is, it was calculated incorrectly)
 
 ```{r tp_calc_test_1, echo=T}
 fish <- read.csv("fish.csv")
 h <- tp_calc(fish, frac=3.4)
-if (h[tp>2 & tp<5])
+if(h$tp>1.841 && h$tp<4.463)
 {
   print("passed")
 } else
@@ -42,12 +45,12 @@ if (h[tp>2 & tp<5])
 }
 ```
 
-Tests that it calculates tp correctly for one specific data point
+Tests that it calculates tp correctly for fish id 136
 
 ```{r tp_calc_test_2, echo=T}
 fish <- read.csv("fish.csv")
 h <- tp_calc(fish, frac=3.4)
-if (round(h[[id==1001]][tp==3.53], digits=2))
+if(round(h$tp[h$id==136], digits=3)==3.166)
 {
   print("passed")
 } else
@@ -61,8 +64,9 @@ if (round(h[[id==1001]][tp==3.53], digits=2))
 Test to make sure an FCL value was calculated for all 12 sites in the dataset
 
 ```{r fcl_calc_test_1, echo=T}
-h <- fcl_calc(fish, frac)
-if (nrow(h)==12)
+tpdf <- tp_calc(fish, 3.4)
+h <- fcl_calc(tpdf)
+if(nrow(h)==4)
 {
   print("passed")
 } else
@@ -71,12 +75,12 @@ if (nrow(h)==12)
 }
 ```
 
-Test to make sure that FCL was calculated correctly for site 1a
+Test to make sure that FCL was calculated correctly for site "SCR"
 
 ```{r fcl_calc_test_2, echo=T}
-fish <- read.csv("fish.csv")
-h <- fcl_calc(fish, frac)
-if (round(h[[site=="1a"]][maxtp==4.20], digits = 2))
+tpdf <- tp_calc(fish, 3.4)
+h <- fcl_calc(na.omit(tpdf))
+if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
 {
   print("passed")
 } else

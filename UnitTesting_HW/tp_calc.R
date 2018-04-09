@@ -14,56 +14,12 @@
 #
 #Note: assumes that ID numbers are not repeated among different sites of the same project
 
-muss <- read.csv("muss.csv", header = T)
-base_sig <- function(muss, frac=3.4) {
-  site <- levels(muss$site)
-  base <- vector(mode = "numeric")
-  for(i in site) {
-    base[i] <- mean(muss$d15N[muss$site==i])
-  }
-  mussdf <- data.frame(site, base)
-  colnames(mussdf) <- c("Site", "Baseline")
-  return(mussdf)
-}
 
 ####
 
 #For each value in column A, do this formula to it and put it in a new column (X)
 #(could just have one function to populate new column (maybe use levels?) and then do the actual calculation in seperate function!)
 
-#I think this one actually worked
-mussdf <- base_sig(muss, 3.4)
-fish <- na.omit(read.csv("fish.csv", header = T))
-tp_calc <- function(fish, frac=3.4){
-  for(i in 1:length(fish$site)) {
-    if(fish$site[i] %in% mussdf$Site) {
-      fish$tp[i] <- ((((fish$d15N-mussdf$Baseline)[i])/frac)+1)
-    }
-  }
-  tpdf <- data.frame(fish$site, fish$d15N, fish$species, fish$id, fish$tp)
-  colnames(tpdf) <- c("Site", "d15N", "Species", "ID", "Trophic Position")
-  return(tpdf)
-}
-
-#testing modifications
-#for each row in fish$d15N, subtract the value corresponding to the site code
-
-for(i in fish$d15N) {
-  fish$test[i] <- fish$d15N-mussdf$Baseline
-}
-
-mussdf <- base_sig(muss, 3.4)
-fish <- na.omit(read.csv("fish.csv", header = T))
-tp_calc <- function(fish, frac=3.4){
-  for(i in fish$site) {
-    if(fish$site[i] %in% mussdf$Site) {
-      fish$tp[i] <- ((((fish$d15N-mussdf$Baseline)[i])/frac)+1)
-    }
-  }
-  tpdf <- data.frame(fish$site, fish$d15N, fish$species, fish$id, fish$tp)
-  colnames(tpdf) <- c("Site", "d15N", "Species", "ID", "Trophic Position")
-  return(tpdf)
-}
 ####### this one is better, actually gives right answer
 mussdf <- base_sig(muss, 3.4)
 fish <- read.csv("fish.csv", header = T)
@@ -74,18 +30,3 @@ tp_calc <- function(fish, frac=3.4){
   colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")
   return(tpdf)
 }
-#ID=136
-
-#####
-mussdf <- base_sig(muss, 3.4)
-fish <- na.omit(read.csv("fish.csv", header = T))
-tp_calc <- function(fish, frac=3.4){
-  df <- merge(mussdf, fish, by = "site")
-  for(i in df$site) {
-      df$tp[i] <- ((((df$d15N-df$baseline)[i])/frac)+1)  
-      }
-  tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp)
-  colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")
-  return(tpdf)
-}
-
