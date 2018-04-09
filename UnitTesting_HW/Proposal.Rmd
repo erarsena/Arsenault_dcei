@@ -1,11 +1,17 @@
 ---
-title: "Trophic relationships in a Mississippi River macrosystem"
-author: "Emily Arsenault"
+title: "Effect of hydrogeomorphology on trophic relationships in a Mississippi River macrosystem"
+author: Emily Arsenault, Department of Ecology & Evolutionary Biology, University of Kansas, Lawrence, Kansas 66047 USA
 date: "April 9, 2018"
 output: pdf_document
+fontsize: 12pt
+bibliography: datacarpentry.bib
+csl: ecology.csl
 ---
+
 <!--Chunk for package reproducibility-->
-```{r checkpoint, echo=F, include=F}
+```{r checkpoint, echo=F, include=F, warning=F}
+
+#Dependencies: need internet connection to run checkpoint
 
 #install.packages("checkpoint")
 #install.packages("plyr") #working with datasets
@@ -25,75 +31,104 @@ library(maptools)
 library(rgdal)
 library(ggplot2)
 
-#checkpoint("2018-04-01")
+date <- "2018-04-01"
+checkpoint(date)
 
+#Outputs: loaded packages for all functions in file
 ```
 
 <!--Chunk for importing the data-->
 ```{r import, echo=F}
+
+#Dependencies: csv files "muss.csv" (primary consumer data) and "fish.csv" (fish food web data)
+
 muss <- read.csv("muss.csv", header = T) #primary producer signature data (mussels)
 fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, and isotope data
+
+#Output: muss and fish dataframes, data needed for all analyses in this file
 ```
 
-<!--Chunk for cleaning up the data-->
-remove NA vals from isotope data, but need those data for richness/abundance still (or not, since richness was not accurately sampled anyways)
+<!--Chunk for sourcing external scripts-->
 ```{r, echo=F}
 
+#Dependencies: external scripts, each with 1 function
+
+source("base_sig.R")
+source("tp_calc.R")
+source("fcl_calc.R")
+source("plot_web.R")
+
+#Output: available functions base_sig(), tp_calc(), fcl_calc(), and plot_web()
 ```
 
-## **Abstract**
+## **Background**
 
-## **Introduction**
+Recent developments in ecology suggest that the understanding of ecological processes may benefit from an expanded focus at the macrosystem scale, especially in the context of global climate change and species invasions [@Williams2013; @Grabowski2016]. Past studies in lotic ecology have focused primarily on microhabitats and relatively small stream reaches, guided by conceptual models often over-emphasizing the longitudinal gradient of rivers in being a predictor of food web interactions (e.g., River Continuum Concept, @Vannote1980). In more recent attempts to increase spatial scale, researchers have employed meta-analyses and extrapolation techniques; however, these types of studies may not be adequate in themselves for understanding natural systems [@Hilderbrand2004].  
 
-Looking at an old data set from the Mississippi River, POC study but never analyzed
+The Riverine Ecosystem Synthesis (RES), proposed by @Thorp2006, offered a new framework for understanding river ecosystems by “portray[ing] rivers as downstream arrays of large hydrogeomorphic patches (e.g., constricted, braided and floodplain channel areas) formed by catchment geomorphology and climate.” This model integrated concepts from the models before it, but took a strong stance against the River Continuum Concept [@Vannote1980] by suggesting a discontinuous nature of river networks in contrast to the a predictable and continuous gradient. The theoretical foundation of RES was based on concepts from hierarchical patch dynamics [@Wu1995; @Townsend1989; @Poole2002], ecogeomorphology [@Thoms2002], the multiple dimensionality of rivers [@Ward1989].
 
-They determined several different hydrogeomorpholoical zones (FPZs) of the Missisippi River and collected mussels and fish from each of these sites
+Recently, the RES concepts of hydrogeomorphological patches (FPZs) and the hierarchical nature of a landscape (Figure 2) have been directly tied to ecological hypotheses and studies of the river macrosystem (Thorp 2014, McCluney et al. 2014). The ecological macrosystem, a relatively new concept in ecology, can be defined as “a hierarchically organized, integrated terrestrial, inland aquatic and/or marine ecological unit of large spatial extent (c. 102-106 km2 or more depending on the types and sizes of ecosystems present) whose temporal interactions within the unit and with regional through global processes are especially significant over periods of decades to millennia” (Thorp 2014). This concept can be applied to many different systems, but in river ecology, the river macrosystem can be defined as a network of interacting riverscape and floodscape patches. Riverscapes include all currently active main channels, side channels, and backwaters of rivers (Thorp et al. 2006), while floodscapes consist of the normally dry floodplains, floodplain lakes, wetlands, and oxbow lakes (Thorp et al. 2008).  
 
-Want to understand effects of FPZ on species richness, food chain length, food web structure (Layman's metrics)
-How does food chain length (FCL) vary with ecosystem size?
-  Calculate baseline primary producer d15N signature
-  Use that to calculate trophic positions for each individual fish
-  Use that to find maximum trophic position (FCL) at each site
-  
-<!--Chunk for making a map of the study sites-->
-```{r map, echo=F}
-#Dependencies: acis.temp and acis.pcpn dataframes
+The goal of the proposed study is to understand the effects of large-scale river hydrogeomorphology on ecosystem function within a macrosystem framework by conducting a large-scale study of food web dynamics in four unique FPZ sites on the Upper Mississippi River.  
 
-#map <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa"))
-#map <- readOGR("~/Documents/DataCarpentry/Arsenault_dcei/UnitTesting_HW", "cb_2016_us_state_20m")
-#shapeData <- readOGR("~/Documents/DataCarpentry/Arsenault_dcei/UnitTesting_HW", "ne_50m_rivers_lake_centerlines")
-#plot(map)
-#plot(shapeData, add=T, exact=T)
-#need to clip to just show US and only mississippi river states
+## **Driving Questions**
 
-#Output: Tried making a map but wish I could have figured out how to make 1 map with 2016-1950 temperature differences at each weather station
-```
+(Q1) What is the effect of FPZ on fish food webs of the Upper Mississippi River?  
+(P1) Fish food webs complexity increases with FPZ and habitat complexity.  
+
+(Q2) Within FPZs, what is the effect of habitat on fish food webs of the Upper Mississippi River?  
+(P2) Trophic complexity is greatest in side channel habitats, which are connected to flow but also protected, while intermediate trophic complexity will occur in main channel segments and lowest trophic complexity will occur in backwater areas.  
+
+(Q3) Does maximum trophic position, or food chain length (FCL) at a site vary with ecosystem size or with FPZ type?  
+(P3) FPZ complexity will have a greater influence on FCL than will ecosystem size (as is often correlated with downstream position).  
 
 ## **Methods**
 
-### *Study Sites*
+## *Study Sites*
 
-This study was conducted between the months of May and July 2010 in the Upper Mississippi River watershed, from a tributary of its headwaters to its main channel just above its confluence with the Illinois and Missouri Rivers (Figure 1). 
+This study was conducted between the months of May and July 2010 in the Upper Mississippi River watershed, from a tributary in its headwaters to the main channel just above its confluence with the Illinois and Missouri Rivers (Figure 1). We sampled fish and mussels from four major functional process zones (FPZs) along the course of the Upper Mississippi River. Within each of these FPZs, we sampled between one and three different habitat types, which included main channels, side channels, and backwater areas.
+
+<!--Chunk for making a map of the study sites-->
+```{r map, echo=F, warning=F, fig.cap="Study sites located along four different hydrogeomorphic zones of the Mississippi River"}
+
+#Dependencies: csv file with lat and long coordinates for each site
+
+#placeholder map, which I will continue to work on for the final project (mapping in R is NOT intuitive!)
+sites <- read.csv("miss_sites.csv", header = T)
+miss_map <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa", "illinois"), 
+           col=('gray90'), fill=TRUE, mar = c(0, 0, 1, 0))
+points(sites$lon, sites$lat, pch=16, col='black', cex=1, labels = sites$site)
+
+#Output: map of study sites (miss_map)
+```
 
 ### *Fish and Mussel Collection*
 
+Suspension-feeding mussels were hand-collected in shallow areas of each FPZ site. A representative fish community sample was collected from each site using boat electrofishing. Fishes and mussels were identified to species and classified into functional feeding groups based on regional fisheries manuals [@Etnier1993; @Pflieger1997]
+
 ### *Stable Isotope Analysis*
+
+Tissues from all collected fishes and mussels were collected for bulk-tissue stable isotope analysis of carbon and nitrogen. Protenaceous periostracum was collected non-lethally from all native mussels, but invasive zebra mussels were collected whole and sacraficed. Small fish were collected whole, but larger fish were released after a small muscle plug was collected from the dorsal tissue. All collected tissues were rinsed, dried in an oven for 48 hr at 60degC, and homogenized into a fine powder using a Wig-L-Bug(R) Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis. Isotope data for each sample included total C and N, as well as d13C and d15N values, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using: deltaX=((Rsample-Rstandard)-1)x1000. Isotope ratios are given in per mil (__) notation.
 
 ### *Statistical Analysis*
 
-![placeholder site map](watershed.jpg)
+## **Preliminary Results**
 
-```{r analysis, echo=F}
-#muss <- read.csv("muss.csv", header = T)
-#fish <- read.csv("fish.csv", header = T)
-#source("base_sig.R")
-#source("tp_calc.R")
-#source("fcl_calc.R")
-#res<-find_microsats(seq=dat,lenmin=2,lenmax=6,repmin=30)
+```{r foodwebplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
+
+#Dependencies: plot_web function, data frame generated by tp_calc function
+
+plot_web(tpdf)
+
+#Output: plot with x=d13C and y=d15N for fish collected in four different zones of the Mississippi River
 ```
 
-## **Results**
+## **Next Steps**
 
-## **Discussion**
+Next, I will need to expand my analyses to include hydrogeomorphology (basin size, valley characteristics) and the three different habitat types sampled within coarse-scale FPZ types. I would also like to create a publication-quality study sites map. I also plan to create a supplementary table with presence/absence information for all of the species of fish that were collected at each site.
+
+## **Note on Dataset**
+
+My project uses an old data set collected by Jim Thorp, Mike Delong, and Rachel Bowes (2010) that was never analyzed. I did not perform field collections or have a role in experimental design.
 
 ## **References**
