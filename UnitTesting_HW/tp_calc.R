@@ -6,18 +6,20 @@
 #
 #Output -  A dataframe with these columns
 #site      Site along river
+#d13C      d13C isotope signature data
+#d15N      d15N isotope signature data
 #species   Fish species (character class)
 #id        ID number for individual fish
 #tp        Trophic position
 #
-tp_calc <- function(fish, frac=3.4) {
-  
-  #read in data
-  #call base_sig
-  
-  #for(each fish (row) in the dataset)
-    #use the output of base_sig to calculate trophic position
-  
-  return(as.data.frame(c(site, species, id, tp)))
-  
+#Note: assumes that ID numbers are not repeated among different sites of the same project
+#
+mussdf <- base_sig(muss, 3.4)
+fish <- read.csv("fish.csv", header = T)
+tp_calc <- function(dat, frac=3.4){
+  df <- merge(mussdf, fish, by = "site")
+  df$tp <- ((((df$d15N-df$baseline))/frac)+1)
+  tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp)
+  colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")
+  return(tpdf)
 }
