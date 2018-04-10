@@ -5,11 +5,8 @@
 #
 #Output - a dataframe with these columns
 #site     Site along river
-#species  Fish species (character class)
-#id        ID number for individual fish
-#maxtp    Trophic position of the fish with the maximum trophic position (FCL)
+#fcl      Trophic position of the fish with the maximum trophic position (FCL)
 #
-
 tpdf <- na.omit(tp_calc(dat = fish, frac = 3.4))
 fcl_calc <- function(dat) {
   site <- levels(tpdf$site)
@@ -21,3 +18,5 @@ fcl_calc <- function(dat) {
   colnames(fcldf) <- c("site", "fcl")
   return(fcldf)
 }
+
+fcldf <- fcl_calc(tpdf)

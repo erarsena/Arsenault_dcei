@@ -61,25 +61,11 @@ if(round(h$tp[h$id==136], digits=3)==3.166)
   
 ## Tests for fcl_calc
 
-Test to make sure an FCL value was calculated for all 12 sites in the dataset
-
-```{r fcl_calc_test_1, echo=T}
-tpdf <- tp_calc(fish, 3.4)
-h <- fcl_calc(tpdf)
-if(nrow(h)==4)
-{
-  print("passed")
-} else
-{
-  print("failed")
-}
-```
-
 Test to make sure that FCL was calculated correctly for site "SCR"
 
-```{r fcl_calc_test_2, echo=T}
-tpdf <- tp_calc(fish, 3.4)
-h <- fcl_calc(na.omit(tpdf))
+```{r fcl_calc_test_1, echo=T}
+tpdf <- na.omit(tp_calc(fish, 3.4))
+h <- fcl_calc(tpdf)
 if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
 {
   print("passed")
@@ -88,3 +74,5 @@ if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
   print("failed")
 }
 ```
+
+## I wonder if there is a way that I can write a unit test for plot_web(), my isotope biplot? Still thinking about this.

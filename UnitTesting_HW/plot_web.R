@@ -9,7 +9,6 @@
 #Note: assumes a dataset with four sites
 
 tpdf <- tp_calc(fish, 3.4)
-
 plot_web <- function(dat) {
   cnplot <- plot(x = tpdf$d13C, y = tpdf$d15N, pch = 16, 
                  col = c("red", "blue", "green", "black")[as.numeric(tpdf$site)],

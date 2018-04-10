@@ -4,7 +4,7 @@
 #dat        A data frame with primary consumer (mussel) d15N data at one or more sites
 #frac       Trophic discrimination factor (default set at 3.4, most commonly accepted)
 #
-#Output - a data frame with these columns:
+#Output -   a data frame with these columns:
 #sitename   Name of site where primary consumer (mussel) was collected
 #baseline   A single number equal to mean primary producer d15N signature at "site"
 
