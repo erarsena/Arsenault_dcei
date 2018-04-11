@@ -8,6 +8,13 @@ bibliography: datacarpentry.bib
 csl: ecology.csl
 ---
 
+<!--***DAN: Search for ***DAN to find comments-->
+
+<!--***DAN: Reading your proposal before looking at your code it is obvious this is real research and you have clear questions and hypotheses, and apparently access to a good dataset. So this is certainly suitable for a final project. I have a couple warnings, though. The first is, you will want to think carefully, before you do too much more work of any other kind, about which statistical tests you will perform to answer each question and evaluate each hypothesis. The connection from the data to answering the qs is not totally clear at present. That can be the hardest part. I do not want you to realize you have committed yourself to something much harder than you can do inthe allotted time without sacrificing the rest of your work time between now and then. So think about statistical tests, and if it's not clear or you see you would need an ever expanding number of analyses to really answer the question, well you can cut back. This project already has the potential to go beyond what you would strictly need to get a good grade. So, overall, well done, go ahead, but think through the stats in advance, be careful not to bite off more than you can chew in the given time, and scale back if you see evidence that you may have done so.-->
+
+
+
+
 <!--Chunk for package reproducibility-->
 ```{r checkpoint, echo=F, include=F, warning=F}
 
@@ -28,11 +35,15 @@ library(mapdata)
 library(RColorBrewer)
 library(maps)
 library(maptools)
-library(rgdal)
+#library(rgdal)
 library(ggplot2)
-
+if (!dir.exists("./.checkpoint/")){
+  dir.create("./.checkpoint/")
+}
 date <- "2018-04-01"
-checkpoint(date)
+checkpoint(date,checkpointLocation = "./")
+#checkpoint(date)
+#***DAN: This did not knit at first. First it told me I did not have several of the packages. I installed them. I could not install rgdal for some reason, so I commented it out. I also commented out the checkpoint stuff and then it worked (it seems rgdal is not needed?). When I uncommented the checkpoint stuff it didn't run because it could not find the .checkpoint folder. So I added a couple lines as above and told it to put the folder in the repo folder (but NOT added to the repo!) and then it worked. In future you may consider putting the .checkpoint in the repo folder, as I have done, for portability. And also add lines so the Rmd checks for the .checkpoint folder and installs it if it isnt there. If you are using checkpoint in a way that runs, then I think the uninstalled packages would not have been a problem for me. The repo folder is a good place, in my opinion, for the .checkpoint because that is the one directory location that you know will exist on the machine of anyone that clones your git repo.
 
 #Outputs: loaded packages for all functions in file
 ```

@@ -5,6 +5,11 @@ date: "March 28, 2018"
 output: pdf_document
 ---
 
+<!--***DAN: Search for ***DAN to find comments-->
+
+<!--***DAN: This knitted right away, so well done on that.-->
+
+
 ```{r, echo=T}
 source("base_sig.R")
 source("tp_calc.R")
