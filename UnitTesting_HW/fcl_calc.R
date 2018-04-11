@@ -2,7 +2,7 @@
 #
 #Args
 #dat      A dataframe with d15N data for fish at different sites along a river
-#
+#***DAN: again not so clear the precise structure of this df
 #Output - a dataframe with these columns
 #site     Site along river
 #fcl      Trophic position of the fish with the maximum trophic position (FCL)

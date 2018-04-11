@@ -5,9 +5,15 @@ date: "March 28, 2018"
 output: pdf_document
 ---
 
-<!--***DAN: Search for ***DAN to find comments-->
+<!--***DAN: Search for ***DAN to find comments - all files can have comments-->
 
 <!--***DAN: This knitted right away, so well done on that.-->
+
+<!--***DAN: Great use of git, inc tags-->
+
+<!--***DAN: Your unit tests look great in the sense they are set up as requested, and you have function specs but incomplete function code at the halfway tag, so great job on that! I hoped you learned the benefits! You function specs were pretty good but not perfect. See comments in the .R files. Basically, descriptions of inputs were not unambiguously interpretable in all cases.-->
+
+<!--***DAN: Overall great job! Forge ahead with the final project, and I hope the analysis turns out to be scientifically useful! 10/10-->
 
 
 ```{r, echo=T}
