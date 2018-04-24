@@ -3,8 +3,9 @@ Type: Package
 Title: Isotope Ecology Analyses
 Version: 0.0.1
 Author: Emily R. Arsenault
-Maintainer: erarsenault@ku.edu
+Maintainer: <erarsenault@ku.edu>
 Description: The macrivr package provides tools for manipulating isotope data and analyzing food web relationships.
 License: N/A
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.0.1

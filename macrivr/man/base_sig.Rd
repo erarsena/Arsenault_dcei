@@ -2,25 +2,22 @@
 % Please edit documentation in R/base_sig.R
 \name{base_sig}
 \alias{base_sig}
-\title{Takes primary producer d15N signature data separated by site and returns a dataframe with two columns}
+\title{base_sig}
 \usage{
 base_sig(dat, frac = 3.4)
 }
 \arguments{
-\item{dat}{A data frame with primary consumer (mussel) d15N data at one or more sites}
+\item{dat}{A data frame with primary consumer (mussel) d15N data}
 
-\item{frac}{Trophic discrimination factor (default set at 3.4, most commonly accepted)
-
-The output of base_sig is a data frame with columns sitename and baseline.}
+\item{frac}{Trophic fractionation factor, default set at 3.4}
 }
 \value{
-sitename Name of site where primary consumer (mussel) was collected
-
-baseline A single number equal to mean primary producer d15N signature at "site"
+A dataframe of columns sitename and baseline
 }
 \description{
 Takes primary producer d15N signature data separated by site and returns a dataframe with two columns
 }
 \examples{
-base_sig(dat = df, 3.4)
+base_sig(dat = iris, frac = 3.4)
+
 }
