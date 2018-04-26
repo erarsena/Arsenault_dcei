@@ -6,17 +6,14 @@
 #' @param frac Trophic fractionation factor, default set at 3.4
 #'
 #' @return A dataframe of columns sitename and baseline
-#'
-#' @examples
-#' base_sig(dat = iris, frac = 3.4)
-#'
+
 base_sig <- function(dat, frac = 3.4) {
   sitename <- levels(dat$site)
   base <- vector(mode = "numeric")
   for(i in sitename) {
-    base[i] <- mean(dat$d15N[dat$site==i]-frac)
+    base[i] <- mean(dat$d15N[muss$site==i]-frac)
   }
   mussdf <- data.frame(sitename, base)
-  colnames(mussdf) <- c("sitename", "baseline")
+  colnames(mussdf) <- c("site", "baseline")
   return(mussdf)
 }

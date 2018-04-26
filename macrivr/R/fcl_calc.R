@@ -6,9 +6,6 @@
 #'
 #' @return A dataframe of columns sitename and fcl
 #'
-#' @examples
-#' fcl_calc(dat = iris)
-#'
 fcl_calc <- function(tp) {
   site <- levels(tp$site)
   fcl <- vector(mode = "numeric")

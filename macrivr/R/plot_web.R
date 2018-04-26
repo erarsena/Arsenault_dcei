@@ -5,9 +5,6 @@
 #' @param dat A dataframe with d13C and d15N data for fish at different sites along a river
 #'
 #' @return A plot in isotopic space (x=d13C, y=d15N)
-#'
-#' @examples
-#' fcl_calc(dat = iris)
 
 plot_web <- function(dat) {
   cnplot <- plot(x = dat$d13C, y = dat$d15N, pch = 16,

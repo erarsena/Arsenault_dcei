@@ -17,7 +17,3 @@ A dataframe of columns sitename and baseline
 \description{
 Takes primary producer d15N signature data separated by site and returns a dataframe with two columns
 }
-\examples{
-base_sig(dat = iris, frac = 3.4)
-
-}

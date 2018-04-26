@@ -15,6 +15,3 @@ A plot in isotopic space (x=d13C, y=d15N)
 \description{
 Generates a plot in isotopic space for each study site
 }
-\examples{
-fcl_calc(dat = iris)
-}

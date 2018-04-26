@@ -15,7 +15,3 @@ A dataframe of columns sitename and fcl
 \description{
 Takes output from tp_calc to calculate the maximum trophic position (food chain length) for each site in dataframe
 }
-\examples{
-fcl_calc(dat = iris)
-
-}
