@@ -5,26 +5,81 @@ date: "April 24, 2018"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, echo=T}
+devtools::install_github("erarsena/Arsenault_dcei")
+
+library(RCurl)
+library(foreign)
+
+mussurl <- "https://raw.githubusercontent.com/erarsena/Arsenault_dcei/master/UnitTesting_HW/muss.csv"
+muss <- getURL(mussurl)
+muss <- na.omit(read.csv(textConnection(muss)))
+
+fishurl <- "https://raw.githubusercontent.com/erarsena/Arsenault_dcei/master/UnitTesting_HW/fish.csv"
+fish <- getURL(fishurl)
+fish <- na.omit(read.csv(textConnection(fish)))
 ```
 
-## R Markdown
+## Tests for base_sig
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Test that it can find the correct primary producer signature mean for site "WIN"
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r base_sig_test_1, echo=T}
+sitetest <- "WIN"
+frac <- 3.4
+h <- macrivr::base_sig(dat = muss, frac)
+if(round(h[sitetest,2], digits = 3)==7.287)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
 ```
 
-## Including Plots
+## Tests for tp_calc
 
-You can also embed plots, for example:
+Test to make sure that no fish trophic position is less than the minimum trophic position that we observed or greater than the maximum trophic position observed (if it is, it was calculated incorrectly)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r tp_calc_test_1, echo=T}
+base <- macrivr::base_sig(muss, 3.4)
+h <- macrivr::tp_calc(base = base, dat = fish, frac = 3.4)
+if(h$tp>1.841 && h$tp<4.463)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Tests that it calculates tp correctly for fish id 136
+
+```{r tp_calc_test_2, echo=T}
+h <- macrivr::tp_calc(base, fish, frac=3.4)
+if(round(h$tp[h$id==136], digits=3)==3.166)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
+```
+  
+## Tests for fcl_calc
+
+Test to make sure that FCL was calculated correctly for site "SCR"
+
+```{r fcl_calc_test_1, echo=T}
+tpdf <- na.omit(tp_calc(fish, 3.4))
+h <- macrivr::fcl_calc(tpdf)
+if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
+```
+
+## I wonder if there is a way that I can write a unit test for plot_web(), my isotope biplot? Still thinking about this.
