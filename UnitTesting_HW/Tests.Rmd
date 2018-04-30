@@ -86,4 +86,11 @@ if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
 }
 ```
 
-## I wonder if there is a way that I can write a unit test for plot_web(), my isotope biplot? Still thinking about this.
+## Descriptive test for plot_web  
+
+Plot should have delta13C values on the x-axis and delta15N values on the y-axis. delta13C values should be a range of negative numbers, while delta15N values should be a range of positive numbers. There should be separate groups plotted, in the colors blue, red, green, and black.  
+
+```{r plot_web_test_1, echo=T}
+tpdf <- tp_calc(fish, 3.4)
+h <- plot_web(tpdf)
+```
