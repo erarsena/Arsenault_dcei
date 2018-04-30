@@ -6,11 +6,11 @@
 #'
 #' @return A dataframe of columns sitename and fcl
 #'
-fcl_calc <- function(tp) {
-  site <- levels(tp$site)
+fcl_calc <- function(tpdf) {
+  site <- levels(tpdf$site)
   fcl <- vector(mode = "numeric")
   for(i in site) {
-    fcl[i] <- max(tp$tp[dat$site==i])
+    fcl[i] <- max(tpdf$tpdf[dat$site==i])
   }
   fcldf <- data.frame(site, fcl)
   colnames(fcldf) <- c("site", "fcl")

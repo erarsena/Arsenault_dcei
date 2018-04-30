@@ -12,9 +12,17 @@
 #' @seealso \code{\link{fcl_calc}}
 #' @seealso \code{\link{plot_web}}
 
+mussurl <- "https://raw.githubusercontent.com/erarsena/Arsenault_dcei/master/UnitTesting_HW/muss.csv"
+muss <- RCurl::getURL(mussurl)
+muss <- na.omit(read.csv(textConnection(muss)))
+
+fishurl <- "https://raw.githubusercontent.com/erarsena/Arsenault_dcei/master/UnitTesting_HW/fish.csv"
+fish <- RCurl::getURL(fishurl)
+fish <- na.omit(read.csv(textConnection(fish)))
+
 base <- base_sig(muss, 3.4)
-tp_calc <- function(base, dat, frac=3.4){
-  df <- merge(base, dat, by.x = "site", by.y = "site")
+tp_calc <- function(base, fish, frac=3.4){
+  df <- merge(base, fish, by.x = "site", by.y = "site")
   df$tp <- ((((df$d15N-df$baseline))/frac)+1)
   tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp)
   colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")

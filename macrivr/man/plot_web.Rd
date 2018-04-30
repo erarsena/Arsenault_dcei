@@ -4,10 +4,10 @@
 \alias{plot_web}
 \title{plot_web}
 \usage{
-plot_web(dat)
+plot_web(fish)
 }
 \arguments{
-\item{dat}{A dataframe with d13C and d15N data for fish at different sites along a river}
+\item{fish}{A dataframe with d13C and d15N data for fish at different sites along a river}
 }
 \value{
 A plot in isotopic space (x=d13C, y=d15N)
