@@ -1,30 +1,146 @@
 ---
-title: "FinalProject_Arsenault"
-author: "Emily Arsenault"
-date: "April 26, 2018"
+title: "Effect of hydrogeomorphology on trophic relationships in a Mississippi River macrosystem"
+author: Emily R. Arsenault, Department of Ecology & Evolutionary Biology, University of Kansas, Lawrence, Kansas 66047 USA
+date: "May 3, 2018"
 output: pdf_document
+fontsize: 12pt
+bibliography: datacarpentry.bib
+csl: ecology.csl
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+<!--Chunk for package reproducibility-->
+```{r checkpoint, echo=F, include=F, warning=F}
+
+#Dependencies: need internet connection to run checkpoint
+
+#install.packages("checkpoint")
+#install.packages("plyr") #working with datasets
+#install.packages("mapdata") #mapping
+#install.packages("RColorBrewer") #color spectra
+#install.packages("maps") #mapping
+#install.packages("maptools") #mapping
+#install.packages("rgdal")
+#install.packages("ggplot2")
+
+library(checkpoint)
+library(plyr)
+library(mapdata)
+library(RColorBrewer)
+library(maps)
+library(maptools)
+#library(rgdal)
+library(ggplot2)
+if (!dir.exists("./.checkpoint/")){
+  dir.create("./.checkpoint/")
+}
+#date <- "2018-04-01"
+#checkpoint(date,checkpointLocation = "./")
+#checkpoint(date)
+#***DAN: This did not knit at first. First it told me I did not have several of the packages. I installed them. I could not install rgdal for some reason, so I commented it out. I also commented out the checkpoint stuff and then it worked (it seems rgdal is not needed?). When I uncommented the checkpoint stuff it didn't run because it could not find the .checkpoint folder. So I added a couple lines as above and told it to put the folder in the repo folder (but NOT added to the repo!) and then it worked. In future you may consider putting the .checkpoint in the repo folder, as I have done, for portability. And also add lines so the Rmd checks for the .checkpoint folder and installs it if it isnt there. If you are using checkpoint in a way that runs, then I think the uninstalled packages would not have been a problem for me. The repo folder is a good place, in my opinion, for the .checkpoint because that is the one directory location that you know will exist on the machine of anyone that clones your git repo.
+
+#Outputs: loaded packages for all functions in file
 ```
 
-## R Markdown
+<!--Chunk for importing the data-->
+```{r import, echo=F}
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#Dependencies: csv files "muss.csv" (primary consumer data) and "fish.csv" (fish food web data)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+muss <- read.csv("muss.csv", header = T) #primary producer signature data (mussels)
+fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, and isotope data
 
-```{r cars}
-summary(cars)
+#Output: muss and fish dataframes, data needed for all analyses in this file
 ```
 
-## Including Plots
+## **Abstract**
 
-You can also embed plots, for example:
+## **Introduction**
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+
+Recent developments in ecology suggest that the understanding of ecological processes may benefit from an expanded focus at the macrosystem scale, especially in the context of global climate change and species invasions [@Williams2013; @Grabowski2016]. Past studies in lotic ecology have focused primarily on microhabitats and relatively small stream reaches, guided by conceptual models often over-emphasizing the longitudinal gradient of rivers in being a predictor of food web interactions (e.g., River Continuum Concept, [@Vannote1980]). In more recent attempts to increase spatial scale, researchers have employed meta-analyses and extrapolation techniques; however, these types of studies may not be adequate in themselves for understanding natural systems [@Hilderbrand2004].  
+
+The Riverine Ecosystem Synthesis (RES), proposed by @Thorp2006, offered a new framework for understanding river ecosystems by “portray[ing] rivers as downstream arrays of large hydrogeomorphic patches (e.g., constricted, braided and floodplain channel areas) formed by catchment geomorphology and climate.” This model integrated concepts from the models before it, but took a strong stance against the River Continuum Concept [@Vannote1980] by suggesting a discontinuous nature of river networks in contrast to the a predictable and continuous gradient. The theoretical foundation of RES was based on concepts from hierarchical patch dynamics [@Wu1995; @Townsend1989; @Poole2002], ecogeomorphology [@Thoms2002], the multiple dimensionality of rivers [@Ward1989].
+
+Recently, the RES concepts of hydrogeomorphological patches (FPZs) and the hierarchical nature of a landscape have been directly tied to ecological hypotheses and studies of the river macrosystem [@Thorp2014; @McCluney2014]. An ecological macrosystem can be defined as “a hierarchically organized, integrated terrestrial, inland aquatic and/or marine ecological unit of large spatial extent (c. $10^{2}$-$10^{6}$ $km^{2}$ or more depending on the types and sizes of ecosystems present) whose temporal interactions within the unit and with regional through global processes are especially significant over periods of decades to millennia” [@Thorp2014]. This concept can be applied to many different systems, but in river ecology, the river macrosystem can be defined as a network of interacting riverscape and floodscape patches. Riverscapes include all currently active main channels, side channels, and backwaters of rivers, while floodscapes consist of the normally dry floodplains, floodplain lakes, wetlands, and oxbow lakes [@Thorp2006].  
+
+The goal of the proposed study is to understand the effects of large-scale river hydrogeomorphology on ecosystem function within a macrosystem framework by conducting a large-scale study of food web dynamics in four unique FPZ sites on the Upper Mississippi River.  
+
+## **Research Questions**
+
+(Q1) What is the effect of FPZ on fish food webs of the Upper Mississippi River?  
+(P1) Fish food webs complexity increases with FPZ and habitat complexity.  
+
+(Q2) Within FPZs, what is the effect of habitat on fish food webs of the Upper Mississippi River?  
+(P2) Trophic complexity will be greatest in side channel habitats, which are connected to flow but also protected, while intermediate trophic complexity will occur in main channel segments and lowest trophic complexity will occur in backwater areas.  
+
+(Q3) Can food chain length (FCL) be best explained by the ecosystem size of a site or by its FPZ type?  
+(P3) FPZ complexity will have a greater influence on FCL than will ecosystem size.  
+
+## **Methods**
+
+### *Study Sites*
+
+This study was conducted between the months of May and July 2010 in the Upper Mississippi River watershed, from a tributary in its headwaters to the main channel just above its confluence with the Illinois and Missouri Rivers (Figure 1). We sampled fish and mussels from four major functional process zones (FPZs) along the course of the Upper Mississippi River. FPZ sites included Middle Mississippi (MMR), St. Croix River (SCR), Lake Pepin (PEP), and Winona (WIN). Within each of these FPZs, we sampled between one and three different habitat types, which included main channels, side channels, and backwater areas.
+
+<!--Chunk for making a map of the study sites-->
+```{r map, echo=F, fig.height=4, fig.width=2, warning=F, fig.cap="Study sites located along four different hydrogeomorphic zones of the Mississippi River"}
+
+#Dependencies: csv file with lat and long coordinates for each site
+
+#placeholder map, which I will continue to work on for the final project (mapping in R is NOT intuitive!)
+#sites <- read.csv("miss_sites.csv", header = T)
+#miss_map <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa", "illinois"), 
+           #col=('gray90'), fill=TRUE, mar = c(0, 0, 1, 0))
+#points(sites$lon, sites$lat, pch=16, col='black', cex=1, labels = sites$site)
+
+#Output: map of study sites (miss_map)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### *Fish and Mussel Collection*
+
+Suspension-feeding mussels were hand-collected in shallow areas of each FPZ site. A representative fish community sample was collected from each site using boat electrofishing. Fishes and mussels were identified to species and classified into functional feeding groups based on regional fisheries manuals [@Etnier1993; @Pflieger1997]
+
+### *Stable Isotope Analysis*
+
+Tissues from all collected fishes and mussels were collected for bulk-tissue stable isotope analysis of carbon and nitrogen. Protenaceous periostracum was collected non-lethally from all native mussels, but invasive zebra mussels were collected whole and sacraficed. Small fish were collected whole, but larger fish were released after a small muscle plug was collected from the dorsal tissue. All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis. Isotope data for each sample included total C and N, as well as d13C and d15N values, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using: X=((Rsample-Rstandard)-1)x1000. Isotope ratios are given in per mil (_) notation.
+
+### *Statistical Analysis*
+
+All statistical analyses were conducted in R [@R2014]. Consumer trophic position was calculated by the formula: $Trophic Position = [(\delta15Nconsumer - \delta15Nherbivore)/3.4]+1]$, where mean primary producer signatures were calculated using primary consumer (mussel) signatures collected from each Mississippi River site. Food chain length was defined as the maximum trophic position for each site. The fish food web of the Upper Mississippi River was represented using an isotope biplot of d13C and d15N signature values. 
+
+## **Preliminary Results**
+
+<!--Chunk for sourcing external scripts-->
+```{r, echo=F}
+
+#Dependencies: external scripts, each with 1 function
+
+source("base_sig.R")
+source("tp_calc.R")
+source("fcl_calc.R")
+source("plot_web.R")
+
+#Output: available functions base_sig(), tp_calc(), fcl_calc(), and plot_web()
+```
+
+In total, `r nrow(na.omit(tpdf))` fish were collected from `r levels(tpdf$site)` for bulk tissue stable isotope analysis. Average trophic position for all sites along the Upper Mississippi was `r mean(tpdf$tp)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. An isotope biplot suggests differences in food web ecology among sites (Figure 2).
+
+```{r foodwebplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
+
+#Dependencies: plot_web function, data frame generated by tp_calc function
+
+plot_web(tpdf)
+
+#Output: plot with x=d13C and y=d15N for fish collected in four different zones of the Mississippi River
+```
+
+## **Next Steps**
+
+Next, I will need to expand my analyses to include hydrogeomorphology (basin size, valley characteristics) and the three different habitat types sampled within coarse-scale FPZ types. I will also incorporate functional feeding group of fish into food web analyses. Secondary goals are to create a publication-quality study sites map and a large supplementary table with presence/absence information for all of the species of fish that were collected at each site.
+
+## **Note on Dataset**
+
+My project uses an old data set collected by Jim Thorp, Mike Delong, and Rachel Bowes (2010) that has never been analyzed. I did not perform field collections or have a role in experimental design.
+
+## **References**
