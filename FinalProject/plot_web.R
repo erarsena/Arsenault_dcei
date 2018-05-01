@@ -17,6 +17,5 @@ plot_web <- function(dat, group) {
   cnplot <- plot(x = tpdf$d13C, y = tpdf$d15N, pch = 16,
                  col = cscheme[as.numeric(group)],
                  xlab = expression(paste(delta, ""^"13", "C")), ylab = expression(paste(delta, ""^"15", "N")))
-  legend(x = "bottomleft", legend = dat$group)
   return(cnplot)
 }
