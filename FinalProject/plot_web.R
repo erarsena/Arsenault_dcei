@@ -1,17 +1,20 @@
-##Generates a plot in isotopic space for each study site
+#Generates a plot in isotopic space for each study site
 #
 #Args
-#dat      A dataframe with d13C and d15N data for fish at different sites along a river
+##dat (a dataframe with these columns):
+  #"d13C"   d13C isotope signature data (numeric)
+  #"d15N"   d15N isotope signature data (numeric)
 #
-#Output
-#cnplot     Plot in isotopic space (x = d13C, y = d15N)
+##Output
+  #cnplot   Plot in isotopic space (x = d13C, y = d15N)
 #
-#Note: assumes a dataset with four sites
-
+#Note: Assumes a dataset with four sites - adjust variable "cscheme" to customize
+#
 tpdf <- tp_calc(fish, 3.4)
+cscheme <- c("red", "blue", "green", "black")
 plot_web <- function(dat) {
   cnplot <- plot(x = tpdf$d13C, y = tpdf$d15N, pch = 16,
-                 col = c("red", "blue", "green", "black")[as.numeric(tpdf$site)],
+                 col = cscheme[as.numeric(tpdf$site)],
                  xlab = expression(paste(delta, ""^"13", "C")), ylab = expression(paste(delta, ""^"15", "N")))
   return(cnplot)
 }

@@ -1,0 +1,41 @@
+---
+title: Supplement for "Effect of hydrogeomorphology on trophic complexity of the Upper Mississippi River (USA)"
+author: E. R. Arsenault, J. H. Thorp, M. D. Delong, and R. E. Bowes
+date: 03 May 2018
+output: pdf_document
+fontsize: 12pt
+---
+
+<!--Chunk for importing the data-->
+```{r import, echo=F}
+
+#Dependencies: csv files "muss.csv" (primary consumer data) and "fish.csv" (fish food web data)
+
+muss <- read.csv("muss.csv", header = T) #primary producer signature data (mussels)
+fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, and isotope data
+
+#Output: muss and fish dataframes, data needed for all analyses in this file
+```
+
+<!--Chunk for sourcing external scripts (functions)-->
+```{r, echo=F}
+
+#Dependencies: external scripts, each with 1 function
+
+source("base_sig.R")
+source("tp_calc.R")
+source("fcl_calc.R")
+source("plot_web.R")
+
+#Output: available functions base_sig(), tp_calc(), fcl_calc(), and plot_web()
+```
+
+<!--Chunk for creating supplementary tables-->
+```{r tables, include=F, fig.cap="TABLE 1"}
+
+#Dependencies: external scripts, muss and fish datasets
+
+na.omit(fish)
+
+#Output: supplementary table with fish collection and site information
+```

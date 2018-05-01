@@ -1,18 +1,22 @@
 #Takes output from base_sig to calculate the trophic position for each fish (row) in dataframe
 #
 #Args
-#fish      A dataframe with d15N data for fish at different sites along a river
-#frac      Trophic discrimination factor used to calculate trophic position (default = 3.4)
 #
-#Output -  A dataframe with these columns
-#site      Site along river
-#d13C      d13C isotope signature data
-#d15N      d15N isotope signature data
-#species   Fish species (character class)
-#id        ID number for individual fish
-#tp        Trophic position
+##fish (a dataframe with these columns):
+  #"site"       Name of site where consumer (fish) was collected
+  #"d15N"       Consumer d15N signatures for each individual (row) categorized by "site"
+##frac      Trophic discrimination factor used to calculate trophic position (default = 3.4)
+#
+##Output (a dataframe with these columns):
+  #"site"      Name of site where organism was collected (factor)
+  #"d13C"      d13C isotope signature data (numeric)
+  #"d15N"      d15N isotope signature data (numeric)
+  #"species"   Fish species (character)
+  #"id"        ID number for individual fish (numeric)
+  #"tp"        Trophic position (numeric)
 #
 #Note: assumes that ID numbers are not repeated among different sites of the same project
+#Note: rows with NA values removed in function output
 #
 mussdf <- base_sig(muss, 3.4)
 fish <- read.csv("fish.csv", header = T)
@@ -21,5 +25,5 @@ tp_calc <- function(dat, frac=3.4){
   df$tp <- ((((df$d15N-df$baseline))/frac)+1)
   tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp)
   colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")
-  return(tpdf)
+  return(na.omit(tpdf))
 }

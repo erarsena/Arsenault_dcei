@@ -1,11 +1,14 @@
 #Takes output from tp_calc to calculate the maximum trophic position (food chain length) for each site in dataframe
 #
 #Args
-#dat      A dataframe with d15N data for fish at different sites along a river
-#***DAN: again not so clear the precise structure of this df
-#Output - a dataframe with these columns
-#site     Site along river
-#fcl      Trophic position of the fish with the maximum trophic position (FCL)
+#
+##dat (a dataframe with these columns):
+  #"site"     Name of site where primary consumer (mussel) was collected (factor)
+  #"d15N"     d15N isotope signature data (numeric)
+#
+##Output - a dataframe with these columns
+  #"site"     Site along river (factor)
+  #"fcl"      Trophic position of the fish with the maximum trophic position (FCL) (numeric)
 #
 tpdf <- na.omit(tp_calc(dat = fish, frac = 3.4))
 fcl_calc <- function(dat) {
