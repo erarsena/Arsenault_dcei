@@ -60,7 +60,7 @@ The Riverine Ecosystem Synthesis (RES), proposed by @Thorp2006, offered a new fr
 
 Recently, the RES concepts of hydrogeomorphological patches (FPZs) and the hierarchical nature of a landscape have been directly tied to ecological hypotheses and studies of the river macrosystem [@Thorp2014; @McCluney2014]. An ecological macrosystem can be defined as “a hierarchically organized, integrated terrestrial, inland aquatic and/or marine ecological unit of large spatial extent (c. $10^{2}$-$10^{6}$ $km^{2}$ or more depending on the types and sizes of ecosystems present) whose temporal interactions within the unit and with regional through global processes are especially significant over periods of decades to millennia” [@Thorp2014]. This concept can be applied to many different systems, but in river ecology, the river macrosystem can be defined as a network of interacting riverscape and floodscape patches. Riverscapes include all currently active main channels, side channels, and backwaters of rivers, while floodscapes consist of the normally dry floodplains, floodplain lakes, wetlands, and oxbow lakes [@Thorp2006].  
 
-Here, we conduct a large-scale study of food web dynamics to investigate the effects of hydrogeomorphology on ecosystem function within a macrosystem framework. In particular, we investigated the effect of river hydrogeomorphology on fish food web complexity in four unique FPZs of the Upper Mississippi River to answer the primary research question, What is the effect of FPZ on fish food web complexity in the Upper Mississippi River, with the prediction that fish food web complexity would increase with FPZ and habitat complexity.
+Here, we conduct a large-scale study of food web dynamics to investigate the effects of hydrogeomorphology on ecosystem function within a macrosystem framework. In particular, we investigated the effect of river hydrogeomorphology on fish food web complexity in four unique FPZs of the Upper Mississippi River to answer the primary research question, What is the effect of FPZ on fish food web complexity in the Upper Mississippi River, with the prediction that fish food web complexity would increase with FPZ and habitat complexity. RANGE OF N AND RANGE OF C SHOULD INCREASE WITH INCREASING COMPLEXITY.
 
 ## **Methods**
 
@@ -87,6 +87,10 @@ map.scale(ratio = FALSE, metric = FALSE)
 #Output: map of Upper Mississippi River study sites (uppmiss_map)
 ```
 
+### *Quantification of Site Complexity*
+
+At each river site sampled, hydrogeomorphic measurements were taken at transects placed at 500-m intervals along a 10-km reach. The wetted width, or the linear distance between banks at water level, was measured at each transect. We also determined the number of channels intersected by the transect and the number of islands between transects and then used these measurements to quantify channel complexity. Sinuosity of the 10-km sections of a given site and the area of the drainage basin above the site were also determined. A cumulative measure of geomorphic complexity was then produced with each of these __ variables, ranked by increasing complexity. Ranks for all variables were summed to provide a single measure of hydrogeomorphic complexity for each site.
+
 ### *Fish and Mussel Collection*
 
 Suspension-feeding mussels were hand-collected in shallow areas of each FPZ site. A representative fish community sample was collected from each site using boat electrofishing. Fishes and mussels were identified to species and classified into functional feeding groups based on regional fisheries manuals [@Etnier1993; @Pflieger1997]
@@ -95,15 +99,11 @@ Suspension-feeding mussels were hand-collected in shallow areas of each FPZ site
 
 Tissues from all collected fishes and mussels were collected for bulk-tissue stable isotope analysis of carbon and nitrogen ($\delta^{13}C$ and $\delta^{15}N$). For all native mussels, non-lethal collection of protenaceous periostracum was conducted, but invasive zebra mussels were collected whole and sacraficed. Small fish were collected whole, but larger fish were released after a small muscle plug was collected from the dorsal tissue. All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis. Isotope data for each sample included total C and N, as well as $\delta^{13}C$ and $\delta^{15}N$ values, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using: $$X=((Rsample-Rstandard)-1)x1000$$. Isotope ratios are given in per mil (_) notation.
 
-### *Quantification of Site Complexity*
-
-
-
 ### *Statistical Analysis*
 
 All statistical analyses were conducted in R [@R2014]. Consumer trophic position was calculated by the formula: $$Trophic Position = [(\delta^{15}N consumer - \delta^{15}N herbivore)/3.4]+1]$$, where mean primary producer signatures were calculated using primary consumer (mussel) signatures collected from each Mississippi River site. Food chain length was defined as the maximum trophic position for each site. The fish food web of the Upper Mississippi River was represented using an isotope biplot of $\delta^{13}C$ and $\delta^{15}N$ signature values. 
 
-## **Preliminary Results**
+## **Results**
 
 <!--Chunk for sourcing external scripts-->
 ```{r, echo=F}
@@ -115,10 +115,14 @@ source("tp_calc.R")
 source("fcl_calc.R")
 source("plot_web.R")
 
-#Output: available functions base_sig(), tp_calc(), fcl_calc(), and plot_web()
+#Output: available functions base_sig(), tp_calc(), fcl_calc(), plot_web(), and layman_calc()
 ```
 
-In total, `r nrow(na.omit(tpdf))` fish were collected from `r levels(tpdf$site)` for bulk tissue stable isotope analysis. Average trophic position for all sites along the Upper Mississippi was `r mean(tpdf$tp)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. An isotope biplot suggests differences in food web ecology among sites (Figure 2).
+The average ranks from cumulative variables were 7.32 (Upper Mississippi at LaCrosse), 4.70 (Upper Miss at Winona), 4.43 (Lake Pepin), 4.07 (lower site in our most downstream hydrogeomorphic zone of the Mississippi), 2.94 (upper site in the most downstream hydrogeomorphic zone), 2.86 (most downstream site within the St. Croix hydrogeomorphic zone), and 2.20 (upstream site within the St. Croix zone). The complexity value for Lake Pepin site was high because of width and wetted width. 
+
+In total, `r nrow(na.omit(tpdf))` fish were collected from `r levels(tpdf$site)` for bulk tissue stable isotope analysis. Average trophic position for all sites along the Upper Mississippi was `r round(mean(tpdf$tp), digits = 2)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. 
+
+An isotope biplot suggests differences in food web ecology among sites (Figure 2).
 
 <!--Chunk for making isotope plot-->
 ```{r foodwebplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
@@ -130,12 +134,10 @@ plot_web(tpdf)
 #Output: plot with x=d13C and y=d15N for fish collected in four different zones of the Mississippi River
 ```
 
-## **Next Steps**
-
-Next, I will need to expand my analyses to include hydrogeomorphology (basin size, valley characteristics) and the three different habitat types sampled within coarse-scale FPZ types. I will also incorporate functional feeding group of fish into food web analyses. Secondary goals are to create a publication-quality study sites map and a large supplementary table with presence/absence information for all of the species of fish that were collected at each site.
+## **Discussion**
 
 ## **Author Contributions**
 
-J. H. Thorp and M. D. Delong conceived of project ideas and designed the experiment. J. H. Thorp and R. E. Bowes conducted fieldwork and sample collections. E. R. Arsenault conducted statistical analyses and drafted the manuscript. All authors are accountable for all aspects of the work.
+J. H. T. and M. D. D. formulated the question and collected all field data. R. E. B. prepared and processed the samples. E. R. A. conducted statistical analyses and drafted the manuscript.
 
 ## **References**

@@ -23,7 +23,7 @@ fish <- read.csv("fish.csv", header = T)
 tp_calc <- function(dat, frac=3.4){
   df <- merge(mussdf, fish, by = "site")
   df$tp <- ((((df$d15N-df$baseline))/frac)+1)
-  tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp)
-  colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp")
+  tpdf <- data.frame(df$site, df$d13C, df$d15N, df$species, df$id, df$tp, df$feeding, df$habitat)
+  colnames(tpdf) <- c("site", "d13C", "d15N", "species", "id", "tp", "feeding", "habitat")
   return(na.omit(tpdf))
 }
