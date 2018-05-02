@@ -12,7 +12,6 @@
 #
 #
 #
-hgmcomplex <- c() #in order of: MMR, PEP, SCR, WIN
 tpdf <- tp_calc(fish, 3.4)
 layman_calc <- function(lay, group) {
   site <- tpdf$site

@@ -177,6 +177,16 @@ layman_calc(tpdf, tpdf$site)
 #Output:
 ```
 
+<!--Chunk for correlation plot of hydrogeomorphic complexity and food web complexity-->
+```{r complexity, echo=F}
+hgmcomplex <- c(3.51, 4.43, 2.53, 6.01) #in order of: MMR, PEP, SCR, WIN
+laydf <- layman_calc(tpdf, tpdf$site)
+rangeN <- laydf$rangeN
+rangeC <- laydf$rangeC
+plot(rangeN ~ hgmcomplex)
+points(rangeC ~ hgmcomplex)
+```
+
 ## **Discussion**
 
 Another plug for studying rivers at a large scale
