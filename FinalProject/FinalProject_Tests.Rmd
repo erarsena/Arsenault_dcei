@@ -14,13 +14,14 @@ source("fcl_calc.R")
 source("plot_web.R")
 ```
 
-## Tests for base_sig
+## Test for base_sig
 
 Test that it can find the correct primary producer signature mean for site "WIN"
 
 ```{r base_sig_test_1, echo=T}
 sitetest <- "WIN"
 frac <- 3.4
+muss <- read.csv("muss.csv", header = T)
 h <- base_sig(muss, frac)
 if(round(h[sitetest,2], digits = 3)==7.287)
 {
@@ -47,7 +48,7 @@ if(h$tp>1.841 && h$tp<4.463)
 }
 ```
 
-Tests that it calculates tp correctly for fish id 136
+Tests that it calculates tp correctly for fish id #136
 
 ```{r tp_calc_test_2, echo=T}
 fish <- read.csv("fish.csv")
@@ -61,7 +62,7 @@ if(round(h$tp[h$id==136], digits=3)==3.166)
 }
 ```
   
-## Tests for fcl_calc
+## Test for fcl_calc
 
 Test to make sure that FCL was calculated correctly for site "SCR"
 
@@ -75,6 +76,18 @@ if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
 {
   print("failed")
 }
+```
+
+## Test for layman_calc
+
+Test to make sure that metrics were calculated correctly for site "PEP"
+
+```{r layman_calc_test_1, echo=T}
+
+tpdf <- na.omit(tp_calc(fish, 3.4))
+h <- layman_calc(tpdf)
+
+
 ```
 
 ## Descriptive test for plot_web  

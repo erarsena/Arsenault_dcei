@@ -17,7 +17,7 @@ Note: I took your advice and simplified my project a bit to make it more feasibl
 #Note: .checkpoint folder should have been added to my GitHub repo, so I hope it runs with less trouble this time!
 
 #installing packages (if not already installed) and loading libraries
-projpacks <-  c("checkpoint", "plyr", "mapdata", "RColorBrewer", "maps", "maptools", "ggplot2", "SIBER") #packages used in this project
+projpacks <-  c("checkpoint", "plyr", "mapdata", "RColorBrewer", "grDevices", "maps", "maptools", "ggplot2", "SIBER") #packages used in this project
 projinst <- projpacks %in% installed.packages() #finding necessary packages within packages already installed
 
 #installing packages not already installed
@@ -101,7 +101,7 @@ Suspension-feeding mussels were hand-collected in shallow areas of each site. A 
 
 ### *Stable Isotope Analysis*
 
-Tissues from all collected fishes and mussels were used for bulk-tissue stable isotope analysis of carbon and nitrogen ($\delta^{13}C$ and $\delta^{15}N$). All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis of carbon and nitrogen. Isotope data for each sample included  $\delta^{13}C$ and $\delta^{15}N$ signatures, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using the formula: $$\delta X=((Rsample-Rstandard)-1)*1000$$, where X is either $^{13}C$ or $^{15}N$ and the corresponding isotopic ratio (R) is either $^{13}C/^{12}C$ or $^{15}N/^{14}N$. All isotopic signature data is represented using per mille (&permil;) notation. 
+Tissues from all collected fishes and mussels were used for bulk-tissue stable isotope analysis of carbon and nitrogen ($\delta^{13}C$ and $\delta^{15}N$). All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis of carbon and nitrogen. Isotope data for each sample included  $\delta^{13}C$ and $\delta^{15}N$ signatures, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using the formula: $$\delta X=((Rsample-Rstandard)-1)*1000$$ where X is either $^{13}C$ or $^{15}N$ and the corresponding isotopic ratio (R) is either $^{13}C/^{12}C$ or $^{15}N/^{14}N$. All isotopic signature data is represented using per mille (&permil;) notation. 
 
 ### *Statistical Analysis*
 
@@ -127,13 +127,11 @@ source("layman_calc.R")
 
 The average ranks from cumulative variables were 7.32 (Upper Mississippi at LaCrosse), 4.70 (Upper Miss at Winona), 4.43 (Lake Pepin), 4.07 (lower site in our most downstream hydrogeomorphic zone of the Mississippi), 2.94 (upper site in the most downstream hydrogeomorphic zone), 2.86 (most downstream site within the St. Croix hydrogeomorphic zone), and 2.20 (upstream site within the St. Croix zone). The complexity value for Lake Pepin site was high because of width and wetted width. 
 
-### *Organism Collections*
+### *Food Web Complexity*
 
-In total, `r nrow(na.omit(tpdf))` fish were collected from `r levels(tpdf$site)` for bulk tissue stable isotope analysis. Average trophic position for all sites along the Upper Mississippi was `r round(mean(tpdf$tp), digits = 2)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. 
+In total, `r nrow(na.omit(tpdf))` fish representing `r nrow(levels(tpdf$species))` were collected from `r nrow(levels(tpdf$site))` sites `r levels(tpdf$site)` for bulk-tissue stable isotope analysis (see Supplemental Materials for more details). Average trophic position for all sites along the Upper Mississippi was `r round(mean(tpdf$tp), digits = 2)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. 
 
-### *Analysis of Food Web Complexity*
-
-An isotope biplot suggests differences in food web ecology among sites (Figure 2).
+An isotope biplot suggests differences in food web interactions among sites (Figure 2).
 
 <!--Chunk for making isotope plot by site-->
 ```{r siteplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
@@ -141,16 +139,6 @@ An isotope biplot suggests differences in food web ecology among sites (Figure 2
 #Dependencies: plot_web function, data frame generated by tp_calc function
 
 plot_web(tpdf, tpdf$site)
-
-#Output: plot with x=d13C and y=d15N for fish collected in four different zones of the Mississippi River
-```
-
-<!--Chunk for making isotope plot by megahabitat-->
-```{r habitatplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
-
-#Dependencies: plot_web function, data frame generated by tp_calc function
-
-plot_web(tpdf, tpdf$habitat)
 
 #Output: plot with x=d13C and y=d15N for fish collected in four different zones of the Mississippi River
 ```
@@ -177,8 +165,14 @@ layman_calc(tpdf, tpdf$site)
 
 <!--Chunk for correlation plot of hydrogeomorphic complexity and food web complexity-->
 ```{r complexity, echo=F}
+
+#Dependencies:
+
 hgmcomplex <- c(3.51, 4.43, 2.53, 6.01) #in order of: MMR, PEP, SCR, WIN
+
 laydf <- layman_calc(tpdf, tpdf$site)
+
+#Output:
 ```
 
 ## **Discussion**
