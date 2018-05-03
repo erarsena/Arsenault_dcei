@@ -12,11 +12,10 @@
 #Note: Assumes a dataset with four sites - adjust variable "cscheme" to customize
 #
 plot_web <- function(dat) {
-
   cnplot <- plot(x = dat$d13C, y = dat$d15N, pch = 16,
-                 col = getColours(4)[as.numeric(dat$site)],
+                 col = gen_col(4)[as.numeric(dat$site)],
                  xlab = expression(paste(delta, ""^"13", "C")), ylab = expression(paste(delta, ""^"15", "N")))
   legend(x = "bottomright", legend = as.character(unique(dat$site)), 
-         col=getColours(4)[as.numeric(unique(dat$site))], pch=16)
+         col=gen_col(4)[as.numeric(unique(dat$site))], pch=16)
   return(cnplot)
 }

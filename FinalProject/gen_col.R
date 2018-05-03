@@ -6,7 +6,6 @@
 ##Output
 #variable with colors, to be used in plotting using plot_web()
 
-
 gen_col <- function(groups){
   if(require(RColorBrewer)){
     cols <- brewer.pal(groups,"Spectral")

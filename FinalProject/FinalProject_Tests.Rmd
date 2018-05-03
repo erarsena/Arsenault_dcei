@@ -12,6 +12,8 @@ source("base_sig.R")
 source("tp_calc.R")
 source("fcl_calc.R")
 source("plot_web.R")
+source("gen_col.R")
+source("layman_calc.R")
 ```
 
 ## Test for base_sig
@@ -85,7 +87,7 @@ Test to make sure that metrics were calculated correctly for site "PEP"
 ```{r layman_calc_test_1, echo=T}
 
 tpdf <- na.omit(tp_calc(fish, 3.4))
-h <- layman_calc(tpdf)
+h <- layman_calc(tpdf, tpdf$site)
 
 
 ```
@@ -100,5 +102,5 @@ In all cases, there should be separate groups plotted; however, the number of gr
 
 ```{r plot_web_test_1, echo=T}
 tpdf <- tp_calc(fish, 3.4)
-h <- plot_web(tpdf, tpdf$feeding)
+h <- plot_web(tpdf)
 ```

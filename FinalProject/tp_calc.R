@@ -20,6 +20,7 @@
 #
 mussdf <- base_sig(muss, 3.4)
 fish <- read.csv("fish.csv", header = T)
+
 tp_calc <- function(dat, frac=3.4){
   df <- merge(mussdf, fish, by = "site")
   df$tp <- ((((df$d15N-df$baseline))/frac)+1)

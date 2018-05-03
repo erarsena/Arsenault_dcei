@@ -8,7 +8,7 @@ bibliography: datacarpentry.bib
 csl: ecology.csl
 ---
 
-Note: I took your advice and simplified my project a bit to make it more feasible for the timeframe. While the original sampling design included sampling sub-habitats within each of 4 major sites (MMR, SCR, PEP, and WIN), I am ignoring those and just focusing on differences among the 4 sites themselves.
+Note: I have simplified my project a bit to make it more feasible for the timeframe. While the original sampling design mentioned in my proposal included sampling sub-habitats within each of 4 major sites (MMR, SCR, PEP, and WIN), I am ignoring those and just focusing on differences among the 4 sites themselves.
 
 <!--Chunk for installing and loading necessary packages-->
 ```{r checkpoint, echo=F, include=F, warning=F}
@@ -64,7 +64,7 @@ The Riverine Ecosystem Synthesis (RES), proposed by @Thorp2006, offered a new fr
 
 Recently, the RES concepts of hydrogeomorphological patches (FPZs) and the hierarchical nature of a landscape have been directly tied to ecological hypotheses and studies of the river macrosystem [@Thorp2014; @McCluney2014]. An ecological macrosystem can be defined as “a hierarchically organized, integrated terrestrial, inland aquatic and/or marine ecological unit of large spatial extent (c. $10^{2}$-$10^{6}$ $km^{2}$ or more depending on the types and sizes of ecosystems present) whose temporal interactions within the unit and with regional through global processes are especially significant over periods of decades to millennia” [@Thorp2014]. This concept can be applied to many different systems, but in river ecology, the river macrosystem can be defined as a network of interacting riverscape and floodscape patches. Riverscapes include all currently active main channels, side channels, and backwaters of rivers, while floodscapes consist of the normally dry floodplains, floodplain lakes, wetlands, and oxbow lakes [@Thorp2006].  
 
-Here, we conduct a large-scale study of food web dynamics to investigate the effects of hydrogeomorphology on ecosystem function within a macrosystem framework. In particular, we investigated the effect of river hydrogeomorphic complexity on fish food web complexity in four unique FPZs of the Upper Mississippi River to determine whether or not there was an FPZ effect on fish food web complexity in the Upper Mississippi River. We predicted that fish food web complexity, as measured by several common metrics, would increase with increasing habitat complexity within an FPZ.
+Here, we conduct a large-scale food web study to better understand the effects of hydrogeomorphology on ecosystem function within a macrosystem framework. In particular, we investigated the effect of river hydrogeomorphic complexity on fish food web complexity in four unique FPZs of the Upper Mississippi River to determine whether or not there was an FPZ effect on fish food web complexity. We predicted that fish food web complexity, as quantified using several common metrics, would increase with increasing habitat complexity at an FPZ site.
 
 ## **Methods**
 
@@ -77,12 +77,13 @@ This study was conducted between the months of May and July 2010 in the Upper Mi
 
 #Dependencies: csv file with lat and long coordinates for each site
 
-#placeholder map, which I will continue to work on for the final project (mapping in R is NOT intuitive!)
 latuppmiss <- c(45.5675, 44.50, 43.8442, 39.4408)
 lonuppmiss <- c(-92.8647, -92.30, -91.2923, -91.0259)
 sites <- c("SCR", "PEP", "WIN", "MMR")
+
 uppmissdf <- as.data.frame(c(latuppmiss, lonuppmiss, sites))
-uppmiss_map <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa", "illinois"), col=('gray90'), fill=TRUE, mar = c(0, 0, 1, 0))
+uppmiss_map <- map(database = "state", region = c("minnesota", "wisconsin", "missouri", "iowa", "illinois"), 
+                   col=("gray90"), fill=TRUE, mar = c(0, 0, 1, 0))
 points(lonuppmiss, latuppmiss, pch=16, col='black', cex=1)
 with(uppmissdf, text(lonuppmiss-.55, latuppmiss, cex=0.7, labels=sites))
 box()
@@ -93,7 +94,7 @@ map.scale(ratio = FALSE, metric = FALSE)
 
 ### *Quantification of Site Complexity*
 
-Hydrogeomorphic measurements were taken at transects placed at 500-m intervals along a 10-km reach located within the sampling reach for each of the four UMR sites. We measured the wetted width, or the linear distance between banks at current water level, at each transect. We also determined the number of channels and islands that were intersected by each transect, as well as the sinuosity of each reach. A combined sum of these 4 measurements were used to quantify channel complexity. Ranks for these variables were then summed to provide a single measure of hydrogeomorphic complexity for each site.
+Hydrogeomorphic measurements were taken at transects placed at 500 m intervals along a 10 km reach located within the sampling area for each of the four UMR sites. We measured the wetted width, or the linear distance between banks at current water level, at each transect. We also determined the number of channels and islands that were intersected by each transect, as well as the sinuosity of each reach. A combined sum of these 4 measurements were used to quantify channel complexity. Ranks for these variables were then summed to provide a single measure of hydrogeomorphic complexity for each site.
 
 ### *Fish and Mussel Collection*
 
@@ -101,11 +102,11 @@ Suspension-feeding mussels were hand-collected in shallow areas of each site. A 
 
 ### *Stable Isotope Analysis*
 
-Tissues from all collected fishes and mussels were used for bulk-tissue stable isotope analysis of carbon and nitrogen ($\delta^{13}C$ and $\delta^{15}N$). All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis of carbon and nitrogen. Isotope data for each sample included  $\delta^{13}C$ and $\delta^{15}N$ signatures, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using the formula: $$\delta X=((Rsample-Rstandard)-1)*1000$$ where X is either $^{13}C$ or $^{15}N$ and the corresponding isotopic ratio (R) is either $^{13}C/^{12}C$ or $^{15}N/^{14}N$. All isotopic signature data is represented using per mille (&permil;) notation. 
+Tissues from all collected fishes and mussels were used for bulk-tissue stable isotope analysis of carbon and nitrogen ($\delta^{13}C$ and $\delta^{15}N$). All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS, USA) for bulk-tissue stable isotope analysis of carbon and nitrogen. Isotope data for each sample included  $\delta^{13}C$ and $\delta^{15}N$ signatures, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using the formula: $$\delta X=((Rsample-Rstandard)-1)*1000$$ where X is either $^{13}C$ or $^{15}N$ and the corresponding isotopic ratio (R) is either $^{13}C/^{12}C$ or $^{15}N/^{14}N$. All isotopic signature data is represented using per mille (&permil;) notation. 
 
 ### *Statistical Analysis*
 
-All statistical analyses were conducted in R version 3.4.1 [@R2014]. Consumer (fish) trophic position was calculated by the formula: $$Trophic Position = [(\delta^{15}N consumer - \delta^{15}N herbivore)/3.4]+1]$$, where mean primary producer signatures were calculated using herbivore (mussel) signatures collected from each Mississippi River site. Food chain length was defined as the maximum trophic position for each site. In addition, we calculated 15N range, 13C range, and total area (TA) of the convex hull for each site, according to @Layman2007. The fish food web of the Upper Mississippi River was represented using an isotope biplot of $\delta^{13}C$ and $\delta^{15}N$ signature values. 
+All statistical analyses were conducted in R version 3.4.1 [@R2014]. Consumer (fish) trophic position was calculated by the formula: $$Trophic Position = [(\delta^{15}N consumer - \delta^{15}N herbivore)/3.4]+1]$$ where mean primary producer signatures were calculated using herbivore (mussel) signatures collected from each Mississippi River site. Food chain length was defined as the maximum trophic position for each site. In addition, we calculated six Layman's metrics using the SIBER package in R [@SIBER]: $\delta^{15}n$ range, $\delta^{13}C$ range, total area of the convex hull for each site, mean distance to centroid, mean nearest neighbor distance (NND), and the standard deviation of the NND, as detailed in @Layman2007. The fish food web of the Upper Mississippi River was represented using an isotope biplot of $\delta^{13}C$ and $\delta^{15}N$ signature values. 
 
 ## **Results**
 
@@ -117,21 +118,18 @@ All statistical analyses were conducted in R version 3.4.1 [@R2014]. Consumer (f
 source("base_sig.R")
 source("tp_calc.R")
 source("fcl_calc.R")
+source("gen_col.R")
 source("plot_web.R")
 source("layman_calc.R")
 
-#Output: available functions base_sig(), tp_calc(), fcl_calc(), plot_web(), and layman_calc()
+#Output: available functions base_sig(), tp_calc(), fcl_calc(), gen_col(), plot_web(), and layman_calc()
 ```
 
-### *Quantification of Hydrogeomorphic Complexity*
+Average hydrogeomorphic complexity varied among sites. From upstream to downstream, the average hydrogeomorphic complexity scores for each site were: 2.53 for SCR (headwaters), 4.43 for PEP (reservoir), 6.01 for WIN (anastomosing area), and 3.51 for MMR (main channel). 
 
-The average ranks from cumulative variables were 7.32 (Upper Mississippi at LaCrosse), 4.70 (Upper Miss at Winona), 4.43 (Lake Pepin), 4.07 (lower site in our most downstream hydrogeomorphic zone of the Mississippi), 2.94 (upper site in the most downstream hydrogeomorphic zone), 2.86 (most downstream site within the St. Croix hydrogeomorphic zone), and 2.20 (upstream site within the St. Croix zone). The complexity value for Lake Pepin site was high because of width and wetted width. 
+In total, `r nrow(na.omit(tpdf))` fish representing `r nrow(levels(tpdf$species))` were collected from `r nrow(levels(tpdf$site))` sites `r levels(tpdf$site)` for bulk-tissue stable isotope analysis (see Supplemental Materials for more details). Mean trophic position for all sites along the Upper Mississippi was `r round(mean(tpdf$tp), digits = 2)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. 
 
-### *Food Web Complexity*
-
-In total, `r nrow(na.omit(tpdf))` fish representing `r nrow(levels(tpdf$species))` were collected from `r nrow(levels(tpdf$site))` sites `r levels(tpdf$site)` for bulk-tissue stable isotope analysis (see Supplemental Materials for more details). Average trophic position for all sites along the Upper Mississippi was `r round(mean(tpdf$tp), digits = 2)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. 
-
-An isotope biplot suggests differences in food web interactions among sites (Figure 2).
+There were differences in food web structure among sites (Figure 2). At the headwaters of the Mississippi River at site SCR, we collected __ species, and the . The artificial reservoir, site PEP, _____. Further downstream, site WIN, a naturally anastomosing section of the UMR ____. Finally, MMR, the site furthest downstream along the main channel of the UMR ___.
 
 <!--Chunk for making isotope plot by site-->
 ```{r siteplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
@@ -144,7 +142,7 @@ plot_web(tpdf, tpdf$site)
 ```
 
 <!--Chunk for making isotope plot by feeding group-->
-```{r feedingplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
+```{r feedingplot, echo=F, results="hide", fig.cap="Biplot of $\delta^{13}C$ and d15N$\delta^{15}N$ bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
 
 #Dependencies: plot_web function, data frame generated by tp_calc function
 
@@ -180,6 +178,7 @@ laydf <- layman_calc(tpdf, tpdf$site)
 Another plug for studying rivers at a large scale
 
 Hydrogeomorphic complexity
+The complexity value for Lake Pepin site may have been artificially high because of its very large wetted width as a reservoir.
 
 Food web complexity relationship with hydrogeomorphic complexity?
 
