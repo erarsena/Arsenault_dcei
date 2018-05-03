@@ -8,9 +8,7 @@ bibliography: datacarpentry.bib
 csl: ecology.csl
 ---
 
-Note: I have simplified the research question a bit since my project proposal for the sake of clarity & my ability to actually focus on the programming aspect of the assignment.
-
-[JUST MAJOR ZONES, NO MEGAHABITAT STUFF]
+Note: I took your advice and simplified my project a bit to make it more feasible for the timeframe. While the original sampling design included sampling sub-habitats within each of 4 major sites (MMR, SCR, PEP, and WIN), I am ignoring those and just focusing on differences among the 4 sites themselves.
 
 <!--Chunk for installing and loading necessary packages-->
 ```{r checkpoint, echo=F, include=F, warning=F}
@@ -19,7 +17,7 @@ Note: I have simplified the research question a bit since my project proposal fo
 #Note: .checkpoint folder should have been added to my GitHub repo, so I hope it runs with less trouble this time!
 
 #installing packages (if not already installed) and loading libraries
-projpacks <-  c("checkpoint", "plyr", "mapdata", "RColorBrewer", "maps", "maptools", "ggplot2") #packages used in this project
+projpacks <-  c("checkpoint", "plyr", "mapdata", "RColorBrewer", "maps", "maptools", "ggplot2", "SIBER") #packages used in this project
 projinst <- projpacks %in% installed.packages() #finding necessary packages within packages already installed
 
 #installing packages not already installed
@@ -40,7 +38,7 @@ date <- "2018-04-01"
 checkpoint(date,checkpointLocation = "./")
 checkpoint(date)
 
-#Outputs: loaded packages for all functions in file
+#Outputs: loaded packages for all functions in file, checkpoint for package reproducibility
 ```
 
 <!--Chunk for importing the data-->
@@ -56,7 +54,7 @@ fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, 
 
 ## **Abstract**
 
-Historically, many studies in river ecology have focused on investigating processes in great detail over small spatial scales. More recently, studies have begun to suggest the importance of large-scale studies in river ecology. In particular, viewing rivers through their unique hydrogeomorpholgies provides a unique perspective on analyzing habitat complexity and its effect on biotic interactions like food webs. Here, we examined trophic relationships among fish at sites of varying hydrogeomorphic complexity along the Upper Mississippi River. [MAJOR FINDING 1] [MAJOR FINDING 2] The results of this study suggest that hydrogeomorphic complexity is a driver of food chain complexity in rivers, a finding that has important implications for river conservation and management as we strive to promote complexity in this important river ecosystem.
+Historically, many studies in river ecology have focused on investigating processes in great detail over small spatial scales. More recently, studies have begun to suggest the importance of large-scale studies in river ecology. In particular, viewing rivers through their unique hydrogeomorphological characteristics provides a unique perspective on analyzing habitat complexity and its effect on biotic interactions like food webs. Here, we examined trophic relationships among fish at sites of varying hydrogeomorphic complexity along the Upper Mississippi River. [MAJOR FINDING 1] [MAJOR FINDING 2] The results of this study suggest that hydrogeomorphic complexity is a driver of food chain complexity in rivers, a finding that has important implications for river conservation and management as we strive to promote complexity in this important river ecosystem.
 
 ## **Introduction**
 
@@ -72,7 +70,7 @@ Here, we conduct a large-scale study of food web dynamics to investigate the eff
 
 ### *Study Sites*
 
-This study was conducted between the months of May and July 2010 in the Upper Mississippi River (UMR) watershed. Sites were located along a large geographic gradient and represented a variety of hydrogeomorphic characteristics. Four major areas along the UMR were sampled; upstream to downstream, we sampled a tributary (St. Croix River), a reservoir (Lake Pepin), a naturally anastomosing area (near Winona, MN), and a main channel site (above the confluence of the UMR and the Illinois River; Figure 1). We also sampled multiple megahabitat types within each of these major zones: main channels, side channels, and closed backwaters.
+This study was conducted between the months of May and July 2010 in the Upper Mississippi River (UMR) watershed. Sites were located along a large geographic gradient and represented a variety of hydrogeomorphic characteristics. Four major areas along the UMR were sampled; upstream to downstream, we sampled a tributary (St. Croix River), a reservoir (Lake Pepin), a naturally anastomosing area (near Winona, MN), and a main channel site (above the confluence of the UMR and the Illinois River; Figure 1).
 
 <!--Chunk for making a map of the study sites-->
 ```{r map, echo=F, fig.height=8, fig.width=4, warning=F, fig.cap="Study sites located along four different hydrogeomorphic zones of the Mississippi River"}
@@ -95,19 +93,19 @@ map.scale(ratio = FALSE, metric = FALSE)
 
 ### *Quantification of Site Complexity*
 
-Hydrogeomorphic measurements were taken at transects placed at 500-m intervals along a 10-km reach located within each sampling reach. The wetted width, or the linear distance between banks at current water level, was measured at each transect. We also determined the number of channels and islands intersected by each transect, as well as the sinuosity of the 10-km sections. A combined sum of these 4 measurements were used these measurements to quantify channel complexity. Ranks for these variables were then summed to provide a single measure of hydrogeomorphic complexity for each site.
+Hydrogeomorphic measurements were taken at transects placed at 500-m intervals along a 10-km reach located within the sampling reach for each of the four UMR sites. We measured the wetted width, or the linear distance between banks at current water level, at each transect. We also determined the number of channels and islands that were intersected by each transect, as well as the sinuosity of each reach. A combined sum of these 4 measurements were used to quantify channel complexity. Ranks for these variables were then summed to provide a single measure of hydrogeomorphic complexity for each site.
 
 ### *Fish and Mussel Collection*
 
-Suspension-feeding mussels were hand-collected in shallow areas of each site. A representative fish community sample was collected from each site along a 10-km reach using boat electrofishing. Fishes and mussels were identified to species and classified into functional feeding groups based on regional fisheries manuals [@Etnier1993; @Pflieger1997]. For all native mussels, non-lethal collection of protenaceous periostracum was conducted, but invasive zebra mussels were collected whole and sacraficed. Small fish were collected whole, but larger fish were released after a small muscle plug was collected non-lethally from the dorsal tissue. 
+Suspension-feeding mussels were hand-collected in shallow areas of each site. A representative fish community sample was collected from each 10-km site reach using boat electrofishing. Fishes and mussels were identified to species and classified into functional feeding groups based on regional fisheries manuals [@Etnier1993; @Pflieger1997]. We released all native mussels after the sampling a small amount of protenaceous periostracum, but invasive zebra mussels were collected whole and sacraficed. Small fish were collected whole, but larger fish were released after a small muscle plug was collected non-lethally from the dorsal tissue. 
 
 ### *Stable Isotope Analysis*
 
-Tissues from all collected fishes and mussels were used for bulk-tissue stable isotope analysis of carbon and nitrogen ($\delta^{13}C$ and $\delta^{15}N$). All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis. Isotope data for each sample included  $\delta^{13}C$ and $\delta^{15}N$ signatures, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using the formula: $$\delta X=((Rsample-Rstandard)-1)*1000$$
+Tissues from all collected fishes and mussels were used for bulk-tissue stable isotope analysis of carbon and nitrogen ($\delta^{13}C$ and $\delta^{15}N$). All collected tissues were rinsed, dried in an oven for 48 hr at 60&deg;C , and homogenized into a fine powder using a Wig-L-Bug &reg; Mixer-Amalgamator. Prepared samples were held in a dessicator until submitted to the W. M. Keck Paleoenvironmental and Environmental Stable Isotope Laboratory (University of Kansas, Lawrence, KS) for bulk tissue stable isotope analysis of carbon and nitrogen. Isotope data for each sample included  $\delta^{13}C$ and $\delta^{15}N$ signatures, which were determined by the relative difference in isotope ratio between each sample and a known standard (Vienna Pee Dee Belemnite for C or atmospheric nitrogen for N) using the formula: $$\delta X=((Rsample-Rstandard)-1)*1000$$, where X is either $^{13}C$ or $^{15}N$ and the corresponding isotopic ratio (R) is either $^{13}C/^{12}C$ or $^{15}N/^{14}N$. All isotopic signature data is represented using per mille (&permil;) notation. 
 
 ### *Statistical Analysis*
 
-All statistical analyses were conducted in R [@R2014]. Consumer trophic position was calculated by the formula: $$Trophic Position = [(\delta^{15}N consumer - \delta^{15}N herbivore)/3.4]+1]$$, where mean primary producer signatures were calculated using primary consumer (mussel) signatures collected from each Mississippi River site. Food chain length was defined as the maximum trophic position for each site. The fish food web of the Upper Mississippi River was represented using an isotope biplot of $\delta^{13}C$ and $\delta^{15}N$ signature values. 
+All statistical analyses were conducted in R version 3.4.1 [@R2014]. Consumer (fish) trophic position was calculated by the formula: $$Trophic Position = [(\delta^{15}N consumer - \delta^{15}N herbivore)/3.4]+1]$$, where mean primary producer signatures were calculated using herbivore (mussel) signatures collected from each Mississippi River site. Food chain length was defined as the maximum trophic position for each site. In addition, we calculated 15N range, 13C range, and total area (TA) of the convex hull for each site, according to @Layman2007. The fish food web of the Upper Mississippi River was represented using an isotope biplot of $\delta^{13}C$ and $\delta^{15}N$ signature values. 
 
 ## **Results**
 
@@ -181,10 +179,6 @@ layman_calc(tpdf, tpdf$site)
 ```{r complexity, echo=F}
 hgmcomplex <- c(3.51, 4.43, 2.53, 6.01) #in order of: MMR, PEP, SCR, WIN
 laydf <- layman_calc(tpdf, tpdf$site)
-rangeN <- laydf$rangeN
-rangeC <- laydf$rangeC
-plot(rangeN ~ hgmcomplex)
-points(rangeC ~ hgmcomplex)
 ```
 
 ## **Discussion**
@@ -198,5 +192,9 @@ Food web complexity relationship with hydrogeomorphic complexity?
 ## **Author Contributions**
 
 J. H. T. and M. D. D. formulated the question and collected all field data. R. E. B. prepared and processed the samples. E. R. A. conducted statistical analyses and drafted the manuscript.
+
+## **Supplemental Materials**
+
+See supplement for abundance information for each species of mussel and fish collected along all sites of the Upper Mississippi River.
 
 ## **References**

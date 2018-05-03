@@ -1,0 +1,70 @@
+SIBER                   SIBER: A package for fitting Bayesian Ellipses
+                        to Stable Isotope Data
+addEllipse              Adds an ellipse around some data to an existing
+                        plot
+allCentroidVectors      Plot the pairwise distances and angles
+                        describing the difference between centroids of
+                        all groups
+bayesianLayman          Calculate Layman metrics on Bayesian postrior
+                        samples of a community
+bayesianOverlap         Calculate the overlap between two ellipses
+                        based on their posterior distributions.
+communityMetricsML      Calculate the point estimates of the Layman
+                        metrics for each community
+createSiberObject       Read in SIBER format data and generate the
+                        SIBER object
+demo.siber.data         Simulated d13C and d15N isotope-space data
+ellipseBackTransform    Back-transform a z-score siber ellipse to
+                        original location and scale.
+ellipseInOut            Test whether a set of points are inside or
+                        outside a defined circle
+ellipsoidTransform      Apply a normalisation transformation to vectors
+                        of data onto ellipsoids
+extractPosteriorMeans   Extract posterior means from call to 'siberMVN'
+fitEllipse              Fit a multivariate normal distribution to x and
+                        y data using jags
+genCircle               Create a sequence of points on a circle
+generateSiberCommunity
+                        A utility function to simulate a single
+                        community comprised of groups
+generateSiberData       A utility function to simulate isotope data for
+                        several communities
+generateSiberGroup      A utility function to simulate a single group
+                        of data
+groupMetricsML          Calculate maximum likelihood based measures of
+                        dispersion of bivariate data
+hullArea                Calculate the area of a convex hull given its
+                        coordinates
+laymanMetrics           Calculates the 6 Layman metrics on a vector of
+                        x and y data
+maxLikOverlap           Calculate the overlap between two ellipses
+                        based on the maximum likelihood fitted
+                        ellipses.
+plotCommunityHulls      Adds convex hulls to each community to an
+                        existing plot
+plotGroupEllipses       Adds ellipses to an existing plot for each of
+                        your groups
+plotGroupHulls          Plots illustrative convex hulls for each group
+                        within all communities
+plotSiberObject         Creates an isotope biplot and provides a
+                        wrapper to ellipse and hull plotting
+pointsToEllipsoid       Test whether a set of points are inside or
+                        outside a defined ellipse
+posteriorSEA            Calculate the SEA based on a posterior
+                        distribution of Sigma
+siberCentroids          Calculate the polar form of the vector between
+                        pairs of ellipse centroids
+siberConvexhull         Calculate metrics and plotting information for
+                        convex hulls
+siberDensityPlot        Plot credible intervals as shaded boxplots
+                        using 'hdr.boxplot'
+siberEllipses           Calculate the bayesian Standard Ellipse Area
+                        for all groups
+siberMVN                Fit Bayesian bivariate normal distributions to
+                        each group in each community
+sigmaSEA                Calculate metrics corresponding to the Standard
+                        Ellipse based on a covariance matrix
+specificCentroidVectors
+                        Calculate the pairwise distances and angles
+                        describing the difference between centroids of
+                        paired groups

@@ -22,20 +22,22 @@ fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, 
 
 #Dependencies: external scripts, each with 1 function
 
-source("base_sig.R")
-source("tp_calc.R")
-source("fcl_calc.R")
-source("plot_web.R")
+source("fish_supp.R")
 
-#Output: available functions base_sig(), tp_calc(), fcl_calc(), and plot_web()
+#Output: function fish_supp to create supplementary table for diversity of fish collected in this study
 ```
 
 <!--Chunk for creating supplementary tables-->
-```{r tables, include=F, fig.cap="TABLE 1"}
+```{r tables, include=T, echo=F}
 
 #Dependencies: external scripts, muss and fish datasets
 
-na.omit(fish)
+musssupp <- fish_supp(muss)
+knitr::kable(musssupp, col.names = c("Species", "Count"), caption = "Summary of mussel species collected from 4 sites along the Upper Mississippi River", row.names = F, align = "l")
+
+fishsupp <- fish_supp(fish)
+knitr::kable(fishsupp, col.names = c("Species", "Count"), caption = "Summary of fish species collected from 4 sites along the Upper Mississippi River", row.names = F, align = "l")
 
 #Output: supplementary table with fish collection and site information
+```
 ```

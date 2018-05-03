@@ -1,4 +1,4 @@
-#Generates table with several Layman's metric calculations
+#Generates table with six Layman's metric calculations
 #
 #Args
 #
@@ -8,20 +8,19 @@
   #"d15N"
 ##group
 #
-##Output (a dataframe with these columns):
-#
-#
+##Output (a dataframe with these rows, columns designated by argument 'group'):
+  #"dY_range"
+  #"dX_range"
+  #"TA"
+  #"CD"
+  #"NND"
+  #"SDNDD"
 #
 tpdf <- tp_calc(fish, 3.4)
 layman_calc <- function(lay, group) {
-  site <- tpdf$site
-  rangeN <- vector(mode = "numeric")
-  rangeC <- vector(mode = "numeric")
-  for(i in site) {
-    rangeN[i] <- (max(lay$d15N[lay$site==i])-min(lay$d15N[lay$site==i]))
-    rangeC[i] <- (max(lay$d13C[lay$site==i])-min(lay$d13C[lay$site==i]))
+  lay <- vector(mode = "numeric")
+  for(i in levels(group)) {
+  lay[i] <- SIBER::laymanMetrics(fish$d13C[group==i], fish$d15N[group==i])
   }
-  laydf <- data.frame(rangeN, rangeC)
-  colnames(laydf) <- c("rangeN", "rangeC")
-  return(laydf)
+  return(as.data.frame(lay))
 }
