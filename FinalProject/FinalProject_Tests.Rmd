@@ -8,12 +8,14 @@ output: pdf_document
 ## Chunk for importing the functions to test
 
 ```{r, echo=T}
+
 source("base_sig.R")
 source("tp_calc.R")
 source("fcl_calc.R")
 source("plot_web.R")
 source("gen_col.R")
 source("layman_calc.R")
+
 ```
 
 ## Test for base_sig
@@ -21,6 +23,7 @@ source("layman_calc.R")
 Test that it can find the correct primary producer signature mean for site "WIN"
 
 ```{r base_sig_test_1, echo=T}
+
 sitetest <- "WIN"
 frac <- 3.4
 muss <- read.csv("muss.csv", header = T)
@@ -32,6 +35,7 @@ if(round(h[sitetest,2], digits = 3)==7.287)
 {
   print("failed")
 }
+
 ```
 
 ## Tests for tp_calc
@@ -39,8 +43,9 @@ if(round(h[sitetest,2], digits = 3)==7.287)
 Test to make sure that no fish trophic position is less than the minimum trophic position that we observed or greater than the maximum trophic position observed (if it is, it was calculated incorrectly)
 
 ```{r tp_calc_test_1, echo=T}
+
 fish <- read.csv("fish.csv")
-h <- tp_calc(fish, frac=3.4)
+h <- tp_calc(mussdf = mussdf, fish, frac=3.4)
 if(h$tp>1.841 && h$tp<4.463)
 {
   print("passed")
@@ -48,13 +53,15 @@ if(h$tp>1.841 && h$tp<4.463)
 {
   print("failed")
 }
+
 ```
 
 Tests that it calculates tp correctly for fish id #136
 
 ```{r tp_calc_test_2, echo=T}
+
 fish <- read.csv("fish.csv")
-h <- tp_calc(fish, frac=3.4)
+h <- tp_calc(mussdf = mussdf, fish, frac=3.4)
 if(round(h$tp[h$id==136], digits=3)==3.166)
 {
   print("passed")
@@ -62,6 +69,7 @@ if(round(h$tp[h$id==136], digits=3)==3.166)
 {
   print("failed")
 }
+
 ```
   
 ## Test for fcl_calc
@@ -69,7 +77,8 @@ if(round(h$tp[h$id==136], digits=3)==3.166)
 Test to make sure that FCL was calculated correctly for site "SCR"
 
 ```{r fcl_calc_test_1, echo=T}
-tpdf <- na.omit(tp_calc(fish, 3.4))
+
+tpdf <- na.omit(tp_calc(mussdf = mussdf, fish, 3.4))
 h <- fcl_calc(tpdf)
 if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
 {
@@ -78,17 +87,25 @@ if(round(h$fcl[h$site=="SCR"], digits=3)==4.463)
 {
   print("failed")
 }
+
 ```
 
 ## Test for layman_calc
 
-Test to make sure that metrics were calculated correctly for site "PEP"
+Test to make sure that metric "dY_range" was calculated correctly for site "MMR"
 
 ```{r layman_calc_test_1, echo=T}
 
-tpdf <- na.omit(tp_calc(fish, 3.4))
-h <- layman_calc(tpdf, tpdf$site)
-
+tpdf <- na.omit(tp_calc(mussdf = mussdf, fish, 3.4))
+h <- layman_calc(tpdf)
+b <- max(tpdf$d15N[tpdf$site=="MMR"])-min(tpdf$d15N[tpdf$site=="MMR"])
+if(h$MMR$metrics["dY_range"]==b)
+{
+  print("passed")
+} else
+{
+  print("failed")
+}
 
 ```
 
@@ -98,9 +115,11 @@ In all cases, plot should have delta13C values on the x-axis and delta15N values
 
 In all cases, delta13C values should be a range of negative numbers, while delta15N values should be a range of positive numbers. 
 
-In all cases, there should be separate groups plotted; however, the number of groups and the color scheme may vary with the dataset. Color scheme may be changed directly in function specs. Grouping variable (dataframe column) may be changed using the "group" argument when executing the function.
+In all cases, there should be separate groups plotted; however, the number of groups and the color scheme may vary with the dataset. Color scheme may be changed directly in function specs. Grouping variable (dataframe column) may be changed using the "group" argument when executing the function.  
 
 ```{r plot_web_test_1, echo=T}
-tpdf <- tp_calc(fish, 3.4)
+
+tpdf <- tp_calc(mussdf = mussdf, fish, 3.4)
 h <- plot_web(tpdf)
+
 ```

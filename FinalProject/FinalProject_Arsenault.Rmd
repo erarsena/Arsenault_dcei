@@ -42,7 +42,7 @@ checkpoint(date)
 ```
 
 <!--Chunk for sourcing external scripts-->
-```{r, echo=F}
+```{r functions, echo=F, include=F, warning=FALSE}
 
 #Dependencies: external scripts, each with 1 function
 
@@ -67,13 +67,14 @@ fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, 
 mussdf <- base_sig(muss = muss, frac = 3.4)
 tpdf <- tp_calc(mussdf, fish = fish, frac = 3.4)
 fcldf <- fcl_calc(tpdf)
+laydf <- layman_calc(tpdf)
 
-#Output: muss and fish dataframes (CSV files) and mussdf tpdf, and fcldf dataframes (outputs from functions), data needed for all analyses in this file
+#Output: muss and fish dataframes (CSV files) and mussdf tpdf, fcldf, and laydf dataframes (outputs from functions), data needed for all analyses in this file
 ```
 
 ## **Abstract**
 
-Historically, many studies in river ecology have focused on investigating processes in great detail over small spatial scales. More recently, studies have begun to suggest the importance of large-scale studies in river ecology. In particular, viewing rivers through their unique hydrogeomorphological characteristics provides a unique perspective on analyzing habitat complexity and its effect on biotic interactions like food webs. Here, we examined trophic relationships among fish at sites of varying hydrogeomorphic complexity along the Upper Mississippi River. [MAJOR FINDING 1] [MAJOR FINDING 2] The results of this study suggest that hydrogeomorphic complexity is a driver of food chain complexity in rivers, a finding that has important implications for river conservation and management as we strive to promote complexity in this important river ecosystem.
+Historically, many studies in river ecology have focused on investigating processes in great detail over small spatial scales. More recently, studies have begun to suggest the importance of large-scale studies in river ecology. In particular, viewing rivers through their unique hydrogeomorphological characteristics provides a unique perspective on analyzing habitat complexity and its effect on biotic interactions like food webs. Here, we examined trophic relationships among fish at sites of varying hydrogeomorphic complexity along the Upper Mississippi River (UMR). As expected, the highest hydrogeomorphic complexity was observed at a naturally anastomosing section of the UMR. However, food web complexity was highest further downstream, within the {{{}}} The results of this study suggest that hydrogeomorphic complexity is a driver of food chain complexity in rivers, a finding that has important implications for river conservation and management as we strive to promote complexity in this important river ecosystem.
 
 ## **Introduction**
 
@@ -83,7 +84,7 @@ The Riverine Ecosystem Synthesis (RES), proposed by @Thorp2006, offered a new fr
 
 Recently, the RES concepts of hydrogeomorphological patches (FPZs) and the hierarchical nature of a landscape have been directly tied to ecological hypotheses and studies of the river macrosystem [@Thorp2014; @McCluney2014]. An ecological macrosystem can be defined as “a hierarchically organized, integrated terrestrial, inland aquatic and/or marine ecological unit of large spatial extent (c. $10^{2}$-$10^{6}$ $km^{2}$ or more depending on the types and sizes of ecosystems present) whose temporal interactions within the unit and with regional through global processes are especially significant over periods of decades to millennia” [@Thorp2014]. This concept can be applied to many different systems, but in river ecology, the river macrosystem can be defined as a network of interacting riverscape and floodscape patches. Riverscapes include all currently active main channels, side channels, and backwaters of rivers, while floodscapes consist of the normally dry floodplains, floodplain lakes, wetlands, and oxbow lakes [@Thorp2006].  
 
-Here, we conduct a large-scale food web study to better understand the effects of hydrogeomorphology on ecosystem function within a macrosystem framework. In particular, we investigated the effect of river hydrogeomorphic complexity on fish food web complexity in four unique FPZs of the Upper Mississippi River to determine whether or not there was an FPZ effect on fish food web complexity. We predicted that fish food web complexity, as quantified using several common metrics, would increase with increasing habitat complexity at an FPZ site.
+Here, we conduct a large-scale food web study to better understand the effects of hydrogeomorphology on ecosystem function within a macrosystem framework. In particular, we investigated the effect of river hydrogeomorphic complexity on fish food web complexity in four unique FPZs of the Upper Mississippi River to determine whether or not there was an FPZ effect on fish food web complexity. We predicted that food chain length, as well as food web complexity, as quantified using several common metrics, would increase with increasing habitat complexity at an FPZ site.
 
 ## **Methods**
 
@@ -129,16 +130,24 @@ All statistical analyses were conducted in R version 3.4.1 [@R2014]. Consumer (f
 
 ## **Results**
 
+Note: I have simplified this project in a way that it will not really have any statistical meaning right now, but I hope to have set this up in a way that I should be able to just fill in additional site data and re-knit the Rmd file later to update.
+
+### *Site Characterization*
+
 Average hydrogeomorphic complexity varied among sites. From upstream to downstream, the average hydrogeomorphic complexity scores for each site were: 2.53 for SCR (headwaters), 4.43 for PEP (reservoir), 6.01 for WIN (anastomosing area), and 3.51 for MMR (main channel). 
 
-In total, `r nrow(na.omit(tpdf))` fish representing `r nrow(levels(tpdf$species))` were collected from `r nrow(levels(tpdf$site))` sites `r levels(tpdf$site)` for bulk-tissue stable isotope analysis (see Supplemental Materials for more details). Mean trophic position for all sites along the Upper Mississippi was `r round(mean(tpdf$tp), digits = 2)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. 
+In total, `r nrow(na.omit(tpdf))` fish representing `r length(levels(tpdf$species))` were collected from `r length(levels(tpdf$site))` `r length(levels(tpdf$site))` sites (`r levels(tpdf$site)`) for bulk-tissue stable isotope analysis (see Supplemental Materials for more details). At the headwaters of the Mississippi River at site SCR, we collected `r length(unique(fish$species[fish$site=="SCR"]))` species. At the artificial reservoir, site PEP, `r length(unique(fish$species[fish$site=="PEP"]))` fish species were collected. Further downstream, at site WIN, a naturally anastomosing section of the UMR, `r length(unique(fish$species[fish$site=="WIN"]))` fish species were collected. Finally, at MMR, the site furthest downstream along the main channel of the UMR, we collected `r length(unique(fish$species[fish$site=="MMR"]))` different species.
 
-There were differences in food web structure among sites (Figure 2). At the headwaters of the Mississippi River at site SCR, we collected __ species, and the . The artificial reservoir, site PEP, _____. Further downstream, site WIN, a naturally anastomosing section of the UMR ____. Finally, MMR, the site furthest downstream along the main channel of the UMR ___.
+### *Food Web Structure*
+
+Mean trophic position for all sites along the Upper Mississippi was `r round(mean(tpdf$tp), digits = 2)`. Food chain length ranged from `r round(min(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==min(fcldf$fcl)]` to `r round(max(fcldf$fcl), digits=2)` at `r fcldf$site[fcldf$fcl==max(fcldf$fcl)]`. 
+
+Results from six Layman's metrics suggest differences in food web structure among sites of different hydrogeomorphology (Figure 2). Maximum N range (`r laydf$MMR$metrics["dY_range"]`) and maximum C range (`r laydf$MMR$metrics["dX_range"]`) both occurred at site MMR. The largest total area (`r laydf$WIN$metrics["TA"]`) and the maximum centroid distance among the sites (`r laydf$WIN$metrics["CD"]`) were both observed at site WIN. Maximum mean nearest neighbor distance occurred at site PEP (`r laydf$PEP$metrics["NND"]`), while the highest standard deviation of the nearest neighbor distance (`r laydf$MMR$metrics["SDNND"]`) was observed at site MMR (Table 1).
 
 <!--Chunk for making isotope plot by site-->
-```{r siteplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in blue, SCR in green, and WIN in black."}
+```{r siteplot, echo=F, results="hide", fig.cap="Biplot of d13C and d15N bulk tissue isotope signatures for fish collected in four FPZs of the Mississippi River (n=514). Points are colored according to site FPZ, with MMR in red, PEP in orange, SCR in green, and WIN in blue"}
 
-#Dependencies: plot_web function, data frame generated by tp_calc function
+#Dependencies: plot_web() function, data frame generated by tp_calc function
 
 plot_web(tpdf)
 
@@ -146,35 +155,42 @@ plot_web(tpdf)
 ```
 
 <!--Chunk for generating table of Layman's metrics-->
-```{r layman, echo=F, warning=F}
+```{r layman, include=T, echo=F, warning=F, fig.cap="Layman's metrics for four sites along the Upper Mississippi River (SCR, PEP, WIN, and MMR). Layman's metrics include d15N range (dY_range), d13C range (dX_range), total area (TA), centroid distance (CD), mean nearest neighbor distance (NND), and standard deviation of the nearest neighbor distance (SDNND)."}
 
-#Dependencies:
+#Dependencies: layman_calc() function, data generated from tp_calc function
 
-layman_calc(tpdf)
+knitr::kable(as.matrix(layman_calc(tpdf)))
 
-#Output:
+#Output: data frame with 6 Layman's metrics: N range, C range, total area, centroid distance, mean nearest neighbor distance, and standard deviation of the nearest neighbor distances
 ```
 
 <!--Chunk for correlation plot of hydrogeomorphic complexity and food web complexity-->
-```{r complexity, echo=F}
+```{r complexity, echo=F, include=T}
 
-#Dependencies:
+#Dependencies: hydrogeomorphic complexity measurements (given, not calculated), outputs from fcl_calc() and layman_calc()
 
 hgmcomplex <- c(3.51, 4.43, 2.53, 6.01) #in order of: MMR, PEP, SCR, WIN
 
-laydf <- layman_calc(tpdf)
+#To add in later with additional site data:
+#summary(lm([METRIC]~hgmcomplex))
+#plot([METRIC]~hgmcomplex)
 
-#Output:
+#Output: (Will be) regression plots and statistics, but does not make sense to include right now with just 4 data points
 ```
 
 ## **Discussion**
 
-Another plug for studying rivers at a large scale
+Recent expansions to river conceptual models suggest that rivers can be more accurately viewed as patches of varying hydrogeomorphic complexity, where river segments with related hydrogeomorphologic characteristics are expected to be more similar than river segments related by their geographic proximity alone. Here, our results suggest that hydrogeomorphic complexity may be a possible predictor of certain aspects of food web structure.
 
-Hydrogeomorphic complexity
-The complexity value for Lake Pepin site may have been artificially high because of its very large wetted width as a reservoir.
+Hydrogeomorphic complexity values varied among UMR sites. As expected, the greatest hydrogeomorphic complexity was observed at site WIN, a naturally anastomosing site with many channels and islands. The second highest complexity occurred at site PEP; however, the complexity value at this site may have been inflated due to its very high wetted width value, since PEP is an artificial reservoir (Lake Pepin). In future studies, it may be necessary to account for the effect of reservoirs in a different way. MMR, the site furthest downstream on the main channel of the UMR had the next highest complexity value, and SCR, a site in the headwaters of the UMR, had the lowest complexity score overall. These values were also as expected. Both MMR and SCR were largely single-channel areas with few islands and side channels, but the MMR site downstream had a larger wetted width value than the smaller river segments in the St. Croix headwaters.
 
-Food web complexity relationship with hydrogeomorphic complexity?
+Food chain length was highest at SCR, the site with the lowest hydrogeomorphic complexity, which does not support our hypothesis that food chain length would increase with habitat complexity. The individual that was observed to be at the top of the food web at SCR was a largemouth bass (___), which are known to be aggressive predators. It is possible that food chain length might have been higher than expected in these headwater areas because that section of the UMR is partially protected by a state park ____. Higher forest cover and natural habitat in the surrounding riparian areas might allow large fish more opportunities to feed on terrestrial subsidies such as small mammals that might fall into the river and drown. The shortest food chain length was observed in PEP, at Lake Pepin. While lakes tend to have long food chains, this may have been because of the artificial nature of the reservoir. More work should be conducted to better understand how anthropogenic disturbances may be disrupting the natural aquatic food web in this area.
+
+Different aspects of food web complexity, as quantified using Layman's metrics, suggested different patterns when compared to site complexity scores. MMR had the widest spread of both $\delta^{13}C$ and $\delta^{15}N$ values, which suggests a food web supported by a large diversity of different food sources, which supports many different trophic roles, from top predators down to detritivores. Total area (TA) is a measure of total niche space available at a site. Site WIN had the highest TA, which may suggest that hydrogeomorphic complexity does support complex ecological roles in the environment, even if those differences in trophic roles do not ultimately support the highest food chain length along the UMR. 
+
+The next three Layman's metrics uncover food web dynamics happening at a more specific, individual level. 
+
+In conclusion, ___
 
 ## **Author Contributions**
 
