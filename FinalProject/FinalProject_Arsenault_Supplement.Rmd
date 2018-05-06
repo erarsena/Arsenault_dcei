@@ -20,11 +20,11 @@ fish <- read.csv("fish.csv", header = T) #fish consumer richness, length, mass, 
 <!--Chunk for sourcing external scripts (functions)-->
 ```{r, echo=F}
 
-#Dependencies: external scripts, each with 1 function
+#Dependencies: external script with function used to generate table for Supplement
 
 source("fish_supp.R")
 
-#Output: function fish_supp to create supplementary table for diversity of fish collected in this study
+#Output: function fish_supp() to create supplementary table for diversity of fish collected in this study
 ```
 
 <!--Chunk for creating supplementary tables-->
